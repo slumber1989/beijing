@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品思维 · 内训播客</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #e8f0fe 0%, #ffffff 30%, #d4e4fc 60%, #f0f5ff 100%);
+    min-height: 100vh;
+    color: #1a1a2e;
+    line-height: 1.6;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1a73e8 0%, #4285f4 30%, #5b9cf5 60%, #1a73e8 100%);
+    padding: 60px 20px 50px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+    animation: float 8s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-2%, -2%) rotate(2deg); }
+  }
+  .hero h1 { font-size: 42px; font-weight: 700; position: relative; z-index: 1; letter-spacing: 2px; }
+  .hero p { font-size: 18px; opacity: 0.9; margin-top: 12px; position: relative; z-index: 1; }
+  .hero .subtitle { font-size: 14px; opacity: 0.7; margin-top: 8px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  .part-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a73e8;
+    margin: 40px 0 20px;
+    padding-left: 16px;
+    border-left: 4px solid #1a73e8;
+  }
+  .episode-card {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(26,115,232,0.08);
+    border: 1px solid rgba(26,115,232,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .episode-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26,115,232,0.15);
+  }
+  .episode-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .episode-num {
+    background: linear-gradient(135deg, #1a73e8, #4285f4);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .episode-info h3 { font-size: 17px; font-weight: 600; color: #1a1a2e; }
+  .episode-info span {
+    font-size: 13px;
+    color: #5f6368;
+    display: block;
+    margin-top: 2px;
+  }
+  audio {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+  audio::-webkit-media-controls-panel { background: rgba(26,115,232,0.06); }
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #5f6368;
+    font-size: 14px;
+  }
+  .footer a { color: #1a73e8; text-decoration: none; }
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 28px; }
+    .hero p { font-size: 15px; }
+    .episode-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>📚 产品思维 · 内训播客</h1>
+  <p>从新手到资深产品人——刘飞《产品思维》全书解读</p>
+  <div class="subtitle">人力资源部 · 员工培训系列</div>
+</div>
+
+<div class="container">
+
+  <div class="part-title">第一部分 · 认知用户</div>
+
+  <div class="episode-card" id="ch01">
+    <div class="episode-header">
+      <div class="episode-num">01</div>
+      <div class="episode-info">
+        <h3>用户画像的正确打开方式</h3>
+        <span>用户画像不是人口统计标签，而是行为模式集合</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch01.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch02">
+    <div class="episode-header">
+      <div class="episode-num">02</div>
+      <div class="episode-info">
+        <h3>用户场景与需求洞察</h3>
+        <span>脱离场景的需求分析，就像不看地图开车</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch02.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch03">
+    <div class="episode-header">
+      <div class="episode-num">03</div>
+      <div class="episode-info">
+        <h3>用户心智模型</h3>
+        <span>用产品经理的心智模型替代用户心智模型，是最大设计陷阱</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch03.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch04">
+    <div class="episode-header">
+      <div class="episode-num">04</div>
+      <div class="episode-info">
+        <h3>用户需求分析方法</h3>
+        <span>区分需求与解决方案，给需求排优先级，验证真伪</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch04.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch05">
+    <div class="episode-header">
+      <div class="episode-num">05</div>
+      <div class="episode-info">
+        <h3>用户生命周期与价值</h3>
+        <span>从获客到传播，每个阶段的用户体验决定产品成败</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch05.mp3"></audio>
+  </div>
+
+  <div class="part-title">第二部分 · 创造价值</div>
+
+  <div class="episode-card" id="ch06">
+    <div class="episode-header">
+      <div class="episode-num">06</div>
+      <div class="episode-info">
+        <h3>基于用户需求判断用户价值</h3>
+        <span>用户价值 = 新体验 − 旧体验 − 替换成本</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch06.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch07">
+    <div class="episode-header">
+      <div class="episode-num">07</div>
+      <div class="episode-info">
+        <h3>产品价值主张设计</h3>
+        <span>为谁解决什么问题？方案有何不同？用户为什么信你？</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch07.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch08">
+    <div class="episode-header">
+      <div class="episode-num">08</div>
+      <div class="episode-info">
+        <h3>创造价值的产品设计方法</h3>
+        <span>MVP、用户故事驱动、做减法——设计不是自我表达</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch08.mp3"></audio>
+  </div>
+
+  <div class="part-title">第三部分 · 产品落地</div>
+
+  <div class="episode-card" id="ch09">
+    <div class="episode-header">
+      <div class="episode-num">09</div>
+      <div class="episode-info">
+        <h3>探索供给侧的价值</h3>
+        <span>好的需求洞察 + 匹配的供给能力 = 产品成功</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch09.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch10">
+    <div class="episode-header">
+      <div class="episode-num">10</div>
+      <div class="episode-info">
+        <h3>产品迭代与灰度策略</h3>
+        <span>科学迭代、灰度发布、AB测试——上线只是起点</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch10.mp3"></audio>
+  </div>
+
+  <div class="episode-card" id="ch11">
+    <div class="episode-header">
+      <div class="episode-num">11</div>
+      <div class="episode-info">
+        <h3>借鉴科学思维，建立深度认知</h3>
+        <span>大胆假设、小心求证——产品经理的核心是决策能力</span>
+      </div>
+    </div>
+    <audio controls preload="none" src="audio/ch11.mp3"></audio>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>内部培训资料 · 请勿外传 · 人力资源部出品</p>
+</div>
+
+</body>
+</html>
