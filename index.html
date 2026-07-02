@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AstronClaw 630 — 端云协同，智领未来</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-800: #1e40af;
+    --blue-900: #1e3a8a;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; scroll-snap-type: y mandatory; overflow-y: scroll; }
+
+  body {
+    font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--slate-50);
+    color: var(--slate-800);
+    overflow-x: hidden;
+  }
+
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 80px;
+  }
+
+  .slide-inner {
+    max-width: 1200px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== Animated Backgrounds ===== */
+  .bg-gradient-1 {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e0efff 30%, #d4e8ff 60%, #c7dfff 100%);
+  }
+  .bg-gradient-2 {
+    background: linear-gradient(160deg, #f8fbff 0%, #e8f2ff 40%, #dce9ff 70%, #f0f7ff 100%);
+  }
+  .bg-gradient-3 {
+    background: linear-gradient(145deg, #ffffff 0%, #eef5ff 35%, #dce8ff 65%, #cde0ff 100%);
+  }
+  .bg-gradient-4 {
+    background: linear-gradient(180deg, #f5f9ff 0%, #e4eeff 50%, #f0f6ff 100%);
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .orb-1 { width: 400px; height: 400px; background: var(--blue-200); top: -100px; right: -100px; animation-delay: 0s; }
+  .orb-2 { width: 300px; height: 300px; background: var(--blue-300); bottom: -80px; left: -60px; animation-delay: -3s; }
+  .orb-3 { width: 250px; height: 250px; background: var(--blue-100); top: 50%; left: 60%; animation-delay: -5s; }
+  .orb-4 { width: 200px; height: 200px; background: #c7d2fe; bottom: 20%; right: 10%; animation-delay: -2s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* Grid pattern */
+  .grid-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* ===== Typography ===== */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    background: rgba(59,130,246,0.08);
+    border: 1px solid rgba(59,130,246,0.15);
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue-600);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue-500);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  h1 {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--slate-900);
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+  h1 .gradient-text {
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-400), #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h2 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--slate-900);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  h2 .accent { color: var(--blue-600); }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--slate-800);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    color: var(--slate-600);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .claim {
+    font-size: 22px;
+    color: var(--blue-700);
+    font-weight: 500;
+    line-height: 1.5;
+    padding-left: 20px;
+    border-left: 3px solid var(--blue-400);
+    margin-bottom: 32px;
+  }
+
+  /* ===== Cards ===== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59,130,246,0.1);
+    border-radius: 20px;
+    padding: 32px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-400), var(--blue-600), #818cf8);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(59,130,246,0.12);
+    border-color: rgba(59,130,246,0.25);
+  }
+  .card:hover::before { transform: scaleX(1); }
+
+  .card-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--blue-50), var(--blue-100));
+    border: 1px solid rgba(59,130,246,0.1);
+  }
+
+  .card h3 { margin-bottom: 10px; }
+  .card p {
+    font-size: 15px;
+    color: var(--slate-600);
+    line-height: 1.65;
+  }
+
+  /* Feature highlight cards */
+  .feature-card {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59,130,246,0.08);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 64px rgba(59,130,246,0.1);
+  }
+  .feature-card .number {
+    position: absolute;
+    top: 24px; right: 32px;
+    font-size: 72px;
+    font-weight: 800;
+    color: rgba(59,130,246,0.06);
+    line-height: 1;
+  }
+
+  /* ===== Scenario Tags ===== */
+  .scenarios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .scenario {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, var(--blue-50), #eef2ff);
+    border: 1px solid rgba(59,130,246,0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--blue-700);
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .scenario:hover {
+    background: linear-gradient(135deg, var(--blue-100), var(--blue-200));
+    transform: translateY(-1px);
+  }
+
+  /* ===== Flow Diagram ===== */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgba(59,130,246,0.15);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--slate-800);
+    transition: all 0.3s ease;
+  }
+  .flow-node:hover {
+    background: var(--blue-600);
+    color: white;
+    border-color: var(--blue-600);
+    transform: scale(1.05);
+  }
+  .flow-arrow {
+    font-size: 20px;
+    color: var(--blue-400);
+    animation: arrow-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes arrow-pulse {
+    0%, 100% { opacity: 1; transform: translateX(0); }
+    50% { opacity: 0.5; transform: translateX(4px); }
+  }
+
+  /* ===== Stat highlight ===== */
+  .stat-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+  }
+  .stat-item {
+    text-align: center;
+    flex: 1;
+    padding: 24px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 16px;
+    border: 1px solid rgba(59,130,246,0.08);
+    transition: all 0.3s ease;
+  }
+  .stat-item:hover {
+    background: rgba(255,255,255,0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(59,130,246,0.08);
+  }
+  .stat-number {
+    font-size: 40px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--blue-600), #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-size: 14px;
+    color: var(--slate-600);
+    margin-top: 4px;
+  }
+
+  /* ===== Progress bar animation ===== */
+  .progress-bar {
+    height: 6px;
+    background: var(--blue-100);
+    border-radius: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+    border-radius: 3px;
+    width: 0%;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ===== CTA Button ===== */
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+  }
+
+  /* ===== Navigation ===== */
+  .nav {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--blue-200);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+  .nav-dot.active {
+    background: var(--blue-500);
+    width: 10px;
+    height: 24px;
+    border-radius: 5px;
+  }
+
+  /* ===== Page Counter ===== */
+  .page-counter {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-size: 13px;
+    color: var(--blue-400);
+    font-weight: 500;
+    z-index: 100;
+    letter-spacing: 1px;
+  }
+
+  /* ===== Animate on scroll ===== */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up:nth-child(2) { transition-delay: 0.1s; }
+  .fade-up:nth-child(3) { transition-delay: 0.2s; }
+  .fade-up:nth-child(4) { transition-delay: 0.3s; }
+
+  /* ===== Cover specific ===== */
+  .cover-title {
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -2px;
+  }
+  .cover-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(129,140,248,0.1));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-700);
+    margin-bottom: 28px;
+  }
+  .cover-line {
+    width: 80px; height: 4px;
+    background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+
+  /* Decorative shapes */
+  .deco-ring {
+    position: absolute;
+    border: 1px solid rgba(59,130,246,0.1);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ===== Ending ===== */
+  .ending-glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ===== Comparison Table ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 24px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(59,130,246,0.08);
+  }
+  .compare-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-700);
+    background: linear-gradient(135deg, var(--blue-50), #eef2ff);
+    border-bottom: 1px solid rgba(59,130,246,0.1);
+  }
+  .compare-table td {
+    padding: 14px 20px;
+    font-size: 14px;
+    color: var(--slate-700);
+    border-bottom: 1px solid rgba(59,130,246,0.06);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(59,130,246,0.03); }
+
+  /* ===== Channel icons ===== */
+  .channel-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .channel-item {
+    padding: 10px 18px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgba(59,130,246,0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate-700);
+    transition: all 0.3s ease;
+  }
+  .channel-item:hover {
+    background: var(--blue-600);
+    color: white;
+    border-color: var(--blue-600);
+    transform: translateY(-2px);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .slide { padding: 40px 24px; }
+    h1 { font-size: 36px; }
+    .cover-title { font-size: 40px; }
+    h2 { font-size: 28px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+    .stat-row { flex-direction: column; }
+    .flow { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav" id="nav"></nav>
+<div class="page-counter" id="pageCounter">01 / 10</div>
+
+<!-- ==================== SLIDE 1: COVER ==================== -->
+<section class="slide bg-gradient-1" id="slide-1">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="grid-pattern"></div>
+  <div class="deco-ring" style="width:500px;height:500px;top:-100px;right:-150px;"></div>
+  <div class="deco-ring" style="width:300px;height:300px;bottom:-50px;left:-80px;"></div>
+
+  <div class="slide-inner" style="text-align:center;">
+    <div class="cover-badge fade-up">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--blue-500);"></span>
+      AstronClaw 630 版本 · 品牌推广
+    </div>
+    <h1 class="cover-title fade-up">
+      <span class="gradient-text">端云协同</span>，<br>智领未来
+    </h1>
+    <div class="cover-line fade-up" style="margin:0 auto 28px;"></div>
+    <p class="subtitle fade-up" style="max-width:640px;margin:0 auto;">
+      让 AI 不只活在你的本地电脑里，也活在云端，更活在你身边的每一台设备上
+    </p>
+    <div style="margin-top:40px;" class="fade-up">
+      <button class="cta-btn" onclick="document.getElementById('slide-2').scrollIntoView({behavior:'smooth'})">
+        了解更多 ↓
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 2: 端云随行 总览 ==================== -->
+<section class="slide bg-gradient-2" id="slide-2">
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">核心王牌 · Core Advantage</div>
+    <h2 class="fade-up">端云随行：<span class="accent">三大差异化能力</span></h2>
+    <p class="subtitle fade-up">端云协同是 AstronClaw 区别于市面所有产品的根本所在——AI 既能借云端算力，又能扎根在你本地的电脑、乃至你身边的每一台设备上</p>
+
+    <div class="card-grid fade-up">
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <h3>端云随行</h3>
+        <p>同一个任务，本地、云端随心切换。本地运行数据不出门，云端运行换设备继续看</p>
+        <div class="scenarios">
+          <span class="scenario">Excel 就地处理</span>
+          <span class="scenario">赶飞机切云端</span>
+          <span class="scenario">重任务不占本机</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h3>跨端接力</h3>
+        <p>换设备任务不断档。不只聊天记录，连文件、中间产物一起打包送到目标设备</p>
+        <div class="scenarios">
+          <span class="scenario">笔记本→工作站</span>
+          <span class="scenario">手机→家里电脑</span>
+          <span class="scenario">离线暂存自动恢复</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📱</div>
+        <h3>设备调用</h3>
+        <p>@ 一台设备让它替你干活，被调设备免装客户端，装伴侣程序即可</p>
+        <div class="scenarios">
+          <span class="scenario">远程用家里账号</span>
+          <span class="scenario">敏感文件就地处理</span>
+          <span class="scenario">零门槛接入</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 3: 端云随行 详情 ==================== -->
+<section class="slide bg-gradient-4" id="slide-3">
+  <div class="orb orb-1" style="top:auto;bottom:-100px;"></div>
+  <div class="orb orb-2" style="bottom:auto;top:-80px;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">位置随心 · 任务不断档 · 设备为我所用</div>
+    <h2 class="fade-up">端云协同，<span class="accent">三个画面感</span></h2>
+
+    <div class="card-grid-2 fade-up">
+      <div class="feature-card">
+        <div class="number">01</div>
+        <h3>🖥 位置随心</h3>
+        <p style="color:var(--slate-600);line-height:1.7;">每个任务背后都有一个「执行大脑」，你自主决定它跑在哪——本地运行数据不出门，云端运行换设备同步看。整理本地 Excel 不想上传下载？选本地运行，全程数据不离机。</p>
+      </div>
+      <div class="feature-card">
+        <div class="number">02</div>
+        <h3>🔗 任务不断档</h3>
+        <p style="color:var(--slate-600);line-height:1.7;">跨端接力把任务攒下的家当整个搬过去——不只聊天记录，连对话里产生和用到的文件、中间产物一起打包送到目标设备，在那边开一份副本接着跑。</p>
+      </div>
+      <div class="feature-card" style="grid-column: 1 / -1;">
+        <div class="number">03</div>
+        <h3>📡 设备为我所用</h3>
+        <p style="color:var(--slate-600);line-height:1.7;">在对话里 @ 一台绑定过的设备，让 AstronClaw 调用它的能力、把结果带回这段对话。关键差异：被 @ 的设备无需安装完整客户端，只要装一个伴侣程序、保持在线即可——它可以是另一台电脑，也可以是一台智能硬件，接入门槛极低。人在公司 @ 家里电脑用它已登录的身份完成，账号密码全程不外泄。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 4: 安全 总览 ==================== -->
+<section class="slide bg-gradient-3" id="slide-4">
+  <div class="orb orb-3" style="right:-80px;left:auto;"></div>
+  <div class="orb orb-4" style="bottom:-60px;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">信任基石 · Security Foundation</div>
+    <h2 class="fade-up">安全：<span class="accent">把每一项权限交到用户手里</span></h2>
+    <p class="claim fade-up">能力越强、接入越多，安全不再是锦上添花，而是用户敢不敢放手把活交出去的前提。AstronClaw 的核心理念——不替用户做主，帮用户把自己的安全权限管得更好。</p>
+
+    <div class="card-grid-2 fade-up">
+      <div class="card">
+        <div class="card-icon">🔐</div>
+        <h3>权限可视化细粒度管理</h3>
+        <p>AI 的每一项权限摊开在用户面前，可视化、精细化呈现——能读哪些文件、执行哪些操作、接入哪些渠道，一目了然，逐项可授予、可收回。</p>
+        <div class="progress-bar"><div class="progress-fill" data-width="85"></div></div>
+        <p style="font-size:12px;color:var(--blue-500);margin-top:6px;">涉及删除/访问/发送等敏感操作 → 自动停下等待确认</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖥</div>
+        <h3>本地执行模式</h3>
+        <p>文件读写与命令在你自己的电脑上执行，对话历史保存在本机磁盘。数据驻留在你这儿、文件不必整包上云、在你自己的信任边界内执行。</p>
+        <div class="progress-bar"><div class="progress-fill" data-width="95"></div></div>
+        <p style="font-size:12px;color:var(--blue-500);margin-top:6px;">卸载客户端即从磁盘删除，从根上减少云端固有风险</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 5: 安全 对比 ==================== -->
+<section class="slide bg-gradient-2" id="slide-5">
+  <div class="orb orb-1" style="left:-80px;right:auto;"></div>
+  <div class="orb orb-2" style="top:auto;bottom:-60px;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">安全底气 · 对比一览</div>
+    <h2 class="fade-up">权限你说了算，<span class="accent">数据留在你这儿</span></h2>
+
+    <table class="compare-table fade-up">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>传统云端 AI</th>
+          <th>AstronClaw</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;">数据存储</td>
+          <td>数据必须上传云端托管</td>
+          <td style="color:var(--blue-700);font-weight:500;">本地模式数据留在本机，不在厂商云端长期落盘</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">权限控制</td>
+          <td>黑盒授权，用户无法细粒度管控</td>
+          <td style="color:var(--blue-700);font-weight:500;">每一项权限可视化，逐项授予/收回</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">敏感操作</td>
+          <td>自动执行，用户难以干预</td>
+          <td style="color:var(--blue-700);font-weight:500;">删除/发送等高危操作自动暂停等待确认</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">凭据安全</td>
+          <td>凭据/密钥交云端代执行</td>
+          <td style="color:var(--blue-700);font-weight:500;">本机权限运行，用家里电脑身份办事不外泄</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">设备调用</td>
+          <td>需要安装完整客户端</td>
+          <td style="color:var(--blue-700);font-weight:500;">伴侣程序逐项开关，仅执行你允许的功能</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 6: AI 团队 ==================== -->
+<section class="slide bg-gradient-1" id="slide-6">
+  <div class="orb orb-3" style="top:-60px;"></div>
+  <div class="orb orb-4" style="bottom:-40px;right:20%;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">亮点 · AI Team</div>
+    <h2 class="fade-up">AI 团队：<span class="accent">你指挥的不只是一个 AI</span></h2>
+    <p class="claim fade-up">你只需说清目标、资料范围和输出格式，Astron Team 会自动拆解任务，分派给 PM、Research、Code、Doc 等角色执行。</p>
+
+    <div class="flow fade-up">
+      <div class="flow-node">📋 目标下达</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">🧠 任务拆解</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">👥 角色分工</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">🔄 并行执行</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-node">📊 成果整合</div>
+    </div>
+
+    <div class="card-grid fade-up" style="margin-top:36px;">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>自动分工</h3>
+        <p>简单任务交给一个专业 Agent，复杂任务交给一组 Agent 分工——像项目负责人一样统筹全局</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>进度可视</h3>
+        <p>在 Tasks / 看板里看每个成员的状态与进度，并行任务再多也看得见、控得住</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>全流程自动化</h3>
+        <p>搜集报道→提取观点→识别共识分歧→生成对比报告→导出 Word→推送飞书，一条指令全链路完成</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 7: 灵感 ==================== -->
+<section class="slide bg-gradient-4" id="slide-7">
+  <div class="orb orb-1" style="right:-60px;top:20%;"></div>
+  <div class="orb orb-2" style="left:10%;bottom:-80px;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">亮点 · Skills & MCP</div>
+    <h2 class="fade-up">灵感：<span class="accent">你想做的事，总有一个为它而生的 AI</span></h2>
+
+    <div class="stat-row fade-up">
+      <div class="stat-item">
+        <div class="stat-number">130+</div>
+        <div class="stat-label">开箱即用技能</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">MCP 生态扩展</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">1</div>
+        <div class="stat-label">链式调用串联</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">⚡</div>
+        <div class="stat-label">SkillHub 搜索安装</div>
+      </div>
+    </div>
+
+    <div class="card-grid fade-up" style="margin-top:32px;">
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>数据场景</h3>
+        <p>Excel 客户表一键清洗去重并出图；每天自动抓 arXiv 论文提炼简报推送飞书</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎙</div>
+        <h3>内容场景</h3>
+        <p>抓当日热点生成播客脚本、用超拟人语音合成音频定时推送；20 页 PPT 带图表直接输出</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔌</div>
+        <h3>MCP 开放生态</h3>
+        <p>能力边界不再局限于自身，配合 SkillHub 技能可搜索、可安装、可自建，用得越久能解决越多</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 8: 全新界面 ==================== -->
+<section class="slide bg-gradient-3" id="slide-8">
+  <div class="orb orb-3" style="left:-60px;top:30%;"></div>
+  <div class="orb orb-4" style="right:10%;bottom:10%;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">亮点 · UI Refresh</div>
+    <h2 class="fade-up">全新界面：<span class="accent">功能更多，却更清晰好用</span></h2>
+    <p class="subtitle fade-up">功能做加法、体验做减法</p>
+
+    <div class="card-grid-2 fade-up">
+      <div class="feature-card">
+        <div class="number">UI</div>
+        <h3>📊 任务进度可视化面板</h3>
+        <p style="color:var(--slate-600);line-height:1.7;">每个任务、每个 Agent 的负责人、状态、进度、最新结果一目了然，再多的并行任务也看得见、控得住。</p>
+      </div>
+      <div class="feature-card">
+        <div class="number">UX</div>
+        <h3>🎯 信息层级重构</h3>
+        <p style="color:var(--slate-600);line-height:1.7;">整体 UI 布局重新梳理，信息层级更清晰、操作路径更短。核心功能突出展示，次要功能合理收纳。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 9: 全天候在线 ==================== -->
+<section class="slide bg-gradient-2" id="slide-9">
+  <div class="orb orb-1" style="top:10%;right:-80px;"></div>
+  <div class="orb orb-2" style="bottom:10%;left:-60px;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner">
+    <div class="tag fade-up">亮点 · Always Online</div>
+    <h2 class="fade-up">全天候在线：<span class="accent">它替你 7×24 值守</span></h2>
+
+    <div class="card-grid fade-up">
+      <div class="card">
+        <div class="card-icon">⏰</div>
+        <h3>定时任务</h3>
+        <p>按天/周/月循环，到点自动跑、自动推送。1 分钟一键部署，免安装免配置</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>记忆能力</h3>
+        <p>跨对话记住你的身份、偏好和项目进展，换设备云端同步不丢失，不用每次重讲背景</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📡</div>
+        <h3>六大渠道</h3>
+        <p>结果主动找到你，不用你去找它</p>
+        <div class="channel-grid">
+          <span class="channel-item">微信</span>
+          <span class="channel-item">企微</span>
+          <span class="channel-item">飞书</span>
+          <span class="channel-item">钉钉</span>
+          <span class="channel-item">QQ</span>
+          <span class="channel-item">微博</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SLIDE 10: 结尾 ==================== -->
+<section class="slide bg-gradient-1" id="slide-10">
+  <div class="ending-glow"></div>
+  <div class="orb orb-1" style="top:-100px;left:-80px;"></div>
+  <div class="orb orb-2" style="bottom:-100px;right:-80px;"></div>
+  <div class="orb orb-3" style="top:40%;left:50%;"></div>
+  <div class="grid-pattern"></div>
+
+  <div class="slide-inner" style="text-align:center;">
+    <div class="cover-badge fade-up" style="margin:0 auto 28px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--blue-500);"></span>
+      AstronClaw 630 · 品牌推广方案
+    </div>
+    <h1 class="cover-title fade-up" style="font-size:52px;">
+      <span class="gradient-text">端云协同</span>立差异<br>
+      <span class="gradient-text">安全</span>托底信任<br>
+      <span class="gradient-text">智能生态</span>提升效率
+    </h1>
+    <div class="cover-line fade-up" style="margin:24px auto;"></div>
+
+    <div class="flow fade-up" style="margin-top:32px;">
+      <div class="flow-node" style="background:var(--blue-600);color:white;border-color:var(--blue-600);">端云协同</div>
+      <span class="flow-arrow" style="color:var(--blue-300);">→</span>
+      <div class="flow-node" style="background:var(--blue-600);color:white;border-color:var(--blue-600);">安全托底</div>
+      <span class="flow-arrow" style="color:var(--blue-300);">→</span>
+      <div class="flow-node" style="background:var(--blue-600);color:white;border-color:var(--blue-600);">亮点补齐</div>
+      <span class="flow-arrow" style="color:var(--blue-300);">→</span>
+      <div class="flow-node" style="background:var(--blue-600);color:white;border-color:var(--blue-600);">星火支撑</div>
+    </div>
+
+    <p class="subtitle fade-up" style="margin-top:40px;max-width:560px;margin-left:auto;margin-right:auto;">
+      让每一次协作更高效，让每一个创意更自由
+    </p>
+  </div>
+</section>
+
+<script>
+// ===== Slide navigation dots =====
+const slides = document.querySelectorAll('.slide');
+const nav = document.getElementById('nav');
+const counter = document.getElementById('pageCounter');
+
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+  nav.appendChild(dot);
+});
+
+// ===== Intersection Observer for animations & active dot =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Animate fade-up elements
+      entry.target.querySelectorAll('.fade-up').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 80);
+      });
+      // Animate progress bars
+      entry.target.querySelectorAll('.progress-fill').forEach(bar => {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width + '%';
+        }, 600);
+      });
+      // Update nav dots
+      const idx = Array.from(slides).indexOf(entry.target);
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === idx);
+      });
+      // Update counter
+      counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+    }
+  });
+}, { threshold: 0.3 });
+
+slides.forEach(slide => observer.observe(slide));
+
+// ===== Keyboard navigation =====
+let currentSlide = 0;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    currentSlide = Math.min(currentSlide + 1, slides.length - 1);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    currentSlide = Math.max(currentSlide - 1, 0);
+    slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+// Track current slide from scroll
+const scrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      currentSlide = Array.from(slides).indexOf(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => scrollObserver.observe(s));
+</script>
+
+</body>
+</html>
