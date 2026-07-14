@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>家庭菜单规划器</title>
+<style>
+:root{--p:#e67e22;--pd:#d35400;--bg:#faf6f1;--card:#fff;--tx:#2c3e50;--mt:#7f8c8d;--bd:#e8ddd3;--veg:#27ae60;--r:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--tx);line-height:1.6}
+.ctr{max-width:960px;margin:0 auto;padding:20px}
+header{text-align:center;padding:30px 0 20px}
+header h1{font-size:2rem;color:var(--pd);margin-bottom:4px}
+header p{color:var(--mt);font-size:.95rem}
+.set{background:var(--card);border-radius:var(--r);padding:24px;margin-bottom:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.set h2{font-size:1.15rem;margin-bottom:16px;color:var(--pd);display:flex;align-items:center;gap:8px}
+.fr{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end}
+.fg{flex:1;min-width:140px}
+.fg label{display:block;font-size:.85rem;color:var(--mt);margin-bottom:6px;font-weight:500}
+.fg input,.fg select{width:100%;padding:10px 14px;border:1.5px solid var(--bd);border-radius:8px;font-size:.95rem;background:#fff;transition:border .2s}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--p)}
+.btn{padding:10px 28px;border:none;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s}
+.bp{background:var(--p);color:#fff}
+.bp:hover{background:var(--pd);transform:translateY(-1px)}
+.bs{padding:6px 14px;font-size:.82rem;border-radius:6px}
+.bo{background:transparent;border:1.5px solid var(--p);color:var(--p)}
+.bo:hover{background:var(--p);color:#fff}
+.dc{background:var(--card);border-radius:var(--r);margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.dh{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:12px 20px;font-weight:600;font-size:1.05rem;display:flex;justify-content:space-between;align-items:center}
+.mr{display:flex;align-items:center;padding:12px 20px;border-bottom:1px solid var(--bd);transition:background .15s}
+.mr:last-child{border-bottom:none}
+.mr:hover{background:#fdf8f3}
+.ml{width:80px;font-weight:600;font-size:.9rem;color:var(--mt);flex-shrink:0}
+.mi{flex:1;min-width:0}
+.mn{font-weight:600;font-size:.95rem}
+.md{font-size:.82rem;color:var(--mt);margin-top:2px}
+.mt{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:500}
+.tv{background:#e8f8ef;color:var(--veg)}
+.tn{background:#fef3e8;color:#e67e22}
+.mc{font-weight:600;color:var(--pd);font-size:.95rem;min-width:60px;text-align:right;margin-right:12px}
+.ma{flex-shrink:0}
+.st{font-size:1.2rem;margin:28px 0 14px;display:flex;align-items:center;gap:8px;color:var(--pd)}
+.sl{background:var(--card);border-radius:var(--r);padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.sl h2{font-size:1.15rem;margin-bottom:16px;color:var(--pd);display:flex;align-items:center;gap:8px}
+.ct{margin-bottom:14px}
+.ct-t{font-size:.88rem;font-weight:600;color:var(--mt);margin-bottom:6px;padding-bottom:4px;border-bottom:1px dashed var(--bd)}
+.ii{display:flex;justify-content:space-between;padding:4px 0;font-size:.9rem}
+.ii .q{color:var(--mt);font-size:.85rem}
+.sb{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;border-radius:var(--r);padding:20px 24px;margin-top:24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;box-shadow:0 4px 16px rgba(230,126,34,.25)}
+.si{text-align:center;flex:1;min-width:100px}
+.si .v{font-size:1.6rem;font-weight:700}
+.si .l{font-size:.82rem;opacity:.85;margin-top:2px}
+.bw{color:#ffeb3b}
+.mo{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:center;justify-content:center}
+.md2{background:#fff;border-radius:var(--r);padding:24px;max-width:500px;width:92%;max-height:80vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.md2 h3{margin-bottom:16px;color:var(--pd)}
+.ro{padding:12px;border:1.5px solid var(--bd);border-radius:8px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.ro:hover{border-color:var(--p);background:#fdf8f3}
+.ro .rn{font-weight:600;font-size:.95rem}
+.ro .rd{font-size:.82rem;color:var(--mt);margin-top:4px}
+.ro .rc{font-size:.85rem;color:var(--pd);font-weight:600;margin-top:4px}
+.ma2{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.pb{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:var(--p);color:#fff;border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:transform .2s;z-index:100}
+.pb:hover{transform:scale(1.1)}
+@media(max-width:600px){.fr{flex-direction:column}.mr{flex-wrap:wrap}.ml{width:100%;margin-bottom:4px}.mc{margin:4px 0}.sb{flex-direction:column;text-align:center}.ctr{padding:12px}}
+@media print{.set,.pb,.ma{display:none!important}.dc{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="ctr">
+<header><h1>🍳 家庭菜单规划器</h1><p>设置人数、偏好和预算，智能生成3天三餐计划</p></header>
+<div class="set">
+<h2>⚙️ 菜单设置</h2>
+<div class="fr">
+<div class="fg"><label>用餐人数</label><input type="number" id="people" value="3" min="1" max="10"></div>
+<div class="fg"><label>饮食偏好</label><select id="diet"><option value="normal">荤素搭配</option><option value="veg">全素食</option><option value="veg-egg">蛋奶素</option></select></div>
+<div class="fg"><label>每日预算（元）</label><input type="number" id="budget" value="120" min="30" max="500" step="10"></div>
+<div class="fg" style="display:flex;align-items:flex-end"><button class="btn bp" onclick="generateMenu()">生成菜单</button></div>
+</div>
+</div>
+<div id="out"></div>
+</div>
+<button class="pb" onclick="window.print()" title="打印">🖨️</button>
+<div id="modal" style="display:none"></div>
+<script>
+const DB={
+breakfast:[
+{name:"小米南瓜粥+花卷",ing:[{n:"小米",c:2},{n:"南瓜",c:3},{n:"面粉",c:2},{n:"酵母",c:.5}],v:1,cal:380},
+{name:"鸡蛋灌饼+豆浆",ing:[{n:"面粉",c:2},{n:"鸡蛋",c:2.5},{n:"豆浆粉",c:2},{n:"生菜",c:1}],v:0,cal:420},
+{name:"燕麦牛奶+全麦面包+水果",ing:[{n:"燕麦片",c:3},{n:"牛奶",c:4},{n:"全麦面包",c:4},{n:"苹果",c:3}],v:0,cal:400},
+{name:"皮蛋瘦肉粥+油条",ing:[{n:"大米",c:1.5},{n:"皮蛋",c:2},{n:"猪肉末",c:4},{n:"油条",c:3}],v:0,cal:450},
+{name:"蔬菜煎饼+红豆粥",ing:[{n:"面粉",c:2},{n:"胡萝卜",c:1.5},{n:"西葫芦",c:2},{n:"红豆",c:3}],v:1,cal:360},
+{name:"牛油果吐司+酸奶",ing:[{n:"牛油果",c:6},{n:"吐司",c:3},{n:"酸奶",c:5},{n:"蜂蜜",c:1}],v:1,cal:390},
+{name:"番茄鸡蛋面",ing:[{n:"面条",c:3},{n:"番茄",c:2.5},{n:"鸡蛋",c:2.5},{n:"小葱",c:.5}],v:0,cal:430},
+{name:"紫薯银耳羹+馒头",ing:[{n:"紫薯",c:2.5},{n:"银耳",c:3},{n:"面粉",c:2},{n:"冰糖",c:1}],v:1,cal:350},
+{name:"玉米杂粮粥+茶叶蛋",ing:[{n:"玉米碴",c:1.5},{n:"杂粮米",c:2},{n:"鸡蛋",c:2.5},{n:"茶叶",c:.5}],v:0,cal:370},
+{name:"蔬菜豆腐脑+烧饼",ing:[{n:"内酯豆腐",c:3},{n:"木耳",c:2},{n:"黄花菜",c:1.5},{n:"芝麻烧饼",c:4}],v:1,cal:340}
+],
+lunch:[
+{name:"红烧排骨+清炒时蔬+米饭",ing:[{n:"排骨",c:18},{n:"油菜",c:2},{n:"大米",c:2},{n:"葱姜蒜",c:1}],v:0,cal:680},
+{name:"番茄牛腩+凉拌黄瓜+米饭",ing:[{n:"牛腩",c:22},{n:"番茄",c:2.5},{n:"黄瓜",c:1.5},{n:"大米",c:2}],v:0,cal:720},
+{name:"鱼香肉丝+醋溜白菜+米饭",ing:[{n:"猪肉",c:10},{n:"木耳笋丝",c:3},{n:"白菜",c:2},{n:"大米",c:2}],v:0,cal:650},
+{name:"麻婆豆腐+蒜蓉西兰花+米饭",ing:[{n:"豆腐",c:3},{n:"猪肉末",c:4},{n:"西兰花",c:3.5},{n:"大米",c:2}],v:0,cal:580},
+{name:"宫保鸡丁+炒土豆丝+米饭",ing:[{n:"鸡胸肉",c:8},{n:"花生米",c:2},{n:"土豆",c:2.5},{n:"大米",c:2}],v:0,cal:660},
+{name:"素什锦+香菇油菜+米饭",ing:[{n:"豆腐干",c:3},{n:"香菇",c:4},{n:"油菜",c:2},{n:"大米",c:2}],v:1,cal:520},
+{name:"地三鲜+凉拌木耳+米饭",ing:[{n:"茄子",c:2.5},{n:"土豆",c:1.5},{n:"青椒",c:2},{n:"大米",c:2}],v:1,cal:540},
+{name:"家常豆腐+清炒豆苗+米饭",ing:[{n:"北豆腐",c:3},{n:"豆苗",c:3},{n:"红椒",c:1.5},{n:"大米",c:2}],v:1,cal:510},
+{name:"香菇鸡丁+炒时蔬+米饭",ing:[{n:"鸡胸肉",c:8},{n:"香菇",c:4},{n:"时令蔬菜",c:2.5},{n:"大米",c:2}],v:0,cal:630},
+{name:"蒜苔炒肉+紫菜蛋花汤+米饭",ing:[{n:"猪肉",c:10},{n:"蒜苔",c:3},{n:"紫菜",c:1.5},{n:"大米",c:2}],v:0,cal:620}
+],
+dinner:[
+{name:"清蒸鲈鱼+蒜蓉菠菜+杂粮饭",ing:[{n:"鲈鱼",c:20},{n:"菠菜",c:2.5},{n:"杂粮米",c:3},{n:"葱姜",c:1}],v:0,cal:550},
+{name:"可乐鸡翅+炒生菜+米饭",ing:[{n:"鸡翅",c:16},{n:"可乐",c:3},{n:"生菜",c:2},{n:"大米",c:2}],v:0,cal:620},
+{name:"水煮肉片+凉拌莴笋+米饭",ing:[{n:"猪肉",c:13},{n:"豆芽",c:1.5},{n:"莴笋",c:2},{n:"大米",c:2}],v:0,cal:680},
+{name:"虾仁滑蛋+清炒芦笋+米饭",ing:[{n:"虾仁",c:20},{n:"鸡蛋",c:3.5},{n:"芦笋",c:5},{n:"大米",c:2}],v:0,cal:560},
+{name:"番茄鸡蛋面+凉拌三丝",ing:[{n:"面条",c:4},{n:"番茄",c:2.5},{n:"鸡蛋",c:3.5},{n:"黄瓜海带丝",c:3}],v:0,cal:530},
+{name:"蔬菜咖喱+糙米饭",ing:[{n:"咖喱块",c:6},{n:"土豆胡萝卜",c:3},{n:"洋葱",c:1.5},{n:"糙米",c:3.5}],v:1,cal:510},
+{name:"素水饺+凉拌拍黄瓜",ing:[{n:"饺子皮",c:4},{n:"韭菜鸡蛋馅",c:5},{n:"黄瓜",c:1.5},{n:"醋蒜",c:.5}],v:0,cal:520},
+{name:"菌菇汤+杂粮馒头+爽口小菜",ing:[{n:"各种菌菇",c:6},{n:"面粉",c:2.5},{n:"萝卜干",c:2},{n:"香油",c:1}],v:1,cal:460},
+{name:"酸汤肥牛+手撕包菜+米饭",ing:[{n:"肥牛卷",c:18},{n:"金针菇",c:3},{n:"包菜",c:2},{n:"大米",c:2}],v:0,cal:640},
+{name:"糖醋里脊+炒西葫芦+米饭",ing:[{n:"猪肉",c:13},{n:"西葫芦",c:2},{n:"番茄酱",c:1.5},{n:"大米",c:2}],v:0,cal:660},
+{name:"干煸四季豆+素炒三丁+米饭",ing:[{n:"四季豆",c:3},{n:"玉米豌豆胡萝卜",c:4},{n:"豆腐干",c:1.5},{n:"大米",c:2}],v:1,cal:490},
+{name:"蒜香西兰花+红烧豆腐+米饭",ing:[{n:"西兰花",c:3.5},{n:"北豆腐",c:3},{n:"香菇",c:2},{n:"大米",c:2}],v:1,cal:480}
+]
+};
+const DN=["第一天","第二天","第三天"];
+const MN={breakfast:"早餐",lunch:"午餐",dinner:"晚餐"};
+const MI={breakfast:"🌅",lunch:"☀️",dinner:"🌙"};
+let menu=null;
+function vok(m,d){if(d==='normal')return 1;if(d==='veg')return m.v;if(d==='veg-egg')return m.v||m.name.includes('蛋')||m.name.includes('牛奶');return 1}
+function avail(t,d){return DB[t].filter(m=>vok(m,d))}
+function pick(a,ex){const f=a.filter(m=>!ex.some(e=>e.name===m.name));const p=f.length?f:a;return p[Math.floor(Math.random()*p.length)]}
+function cost(m,pp){return Math.round(m.ing.reduce((s,i)=>s+i.c,0)*(pp/2)*100)/100}
+function generateMenu(){
+  const pp=Math.max(1,Math.min(10,parseInt(document.getElementById('people').value)||3));
+  const d=document.getElementById('diet').value;
+  const b=Math.max(30,parseInt(document.getElementById('budget').value)||120);
+  menu={pp,d,b,days:[]};
+  const u={breakfast:[],lunch:[],dinner:[]};
+  for(let i=0;i<3;i++){
+    const day={meals:{}};
+    for(const t of['breakfast','lunch','dinner']){
+      const m=pick(avail(t,d),u[t]);
+      u[t].push(m);
+      day.meals[t]={...m,cost:cost(m,pp)};
+    }
+    day.tc=Object.values(day.meals).reduce((s,m)=>s+m.cost,0);
+    menu.days.push(day);
+  }
+  menu.tc=menu.days.reduce((s,d)=>s+d.tc,0);
+  render();
+}
+function render(){
+  if(!menu)return;
+  const{pp,d,b,days,tc}=menu;
+  const over=tc>b*3;
+  let h='';
+  days.forEach((day,di)=>{
+    const do2=day.tc>b;
+    h+=`<div class="dc"><div class="dh">${DN[di]}<span${do2?' style="color:#ffeb3b"':''}>💰 ¥${day.tc.toFixed(0)}${do2?' ⚠️超预算':''}</span></div>`;
+    for(const t of['breakfast','lunch','dinner']){
+      const m=day.meals[t];
+      h+=`<div class="mr"><div class="ml">${MI[t]} ${MN[t]}</div><div class="mi"><span class="mn">${m.name}</span><span class="mt ${m.v?'tv':'tn'}">${m.v?'素食':'荤菜'}</span><div class="md">~${m.cal}千卡/人 · ${m.ing.map(i=>i.n).join('、')}</div></div><div class="mc">¥${m.cost.toFixed(0)}</div><div class="ma"><button class="btn bo bs" onclick="openR(${di},'${t}')">🔄换</button></div></div>`;
+    }
+    h+='</div>';
+  });
+  // Shopping list
+  const im={};
+  days.forEach(day=>{for(const t of['breakfast','lunch','dinner']){day.meals[t].ing.forEach(i=>{if(!im[i.n])im[i.n]={c:0};im[i.n].c+=i.c*(pp/2)})}});
+  const cats={'主食谷物':['大米','杂粮米','糙米','面粉','面条','燕麦片','玉米碴','小米','饺子皮','全麦面包','吐司','油条','馒头','芝麻烧饼'],'肉禽鱼蛋':['排骨','牛腩','猪肉','猪肉末','鸡胸肉','鸡翅','肥牛卷','虾仁','鲈鱼','鸡蛋','皮蛋'],'蔬菜':['油菜','白菜','菠菜','生菜','西兰花','芦笋','豆苗','茄子','青椒','红椒','土豆','胡萝卜','西葫芦','四季豆','番茄','黄瓜','莴笋','豆芽','蒜苔','包菜','南瓜','洋葱','香菇','木耳','金针菇','各种菌菇','黄花菜','萝卜干','时令蔬菜','小葱'],'豆制品':['豆腐','北豆腐','豆腐干','内酯豆腐','豆浆粉'],'其他':['葱姜蒜','葱姜','醋蒜','咖喱块','番茄酱','可乐','冰糖','茶叶','蜂蜜','紫菜','香油','酵母','花生米','牛油果','银耳','苹果','红豆','木耳笋丝','黄瓜海带丝','土豆胡萝卜','玉米豌豆胡萝卜','韭菜鸡蛋馅','紫薯']};
+  const ui=new Set();
+  let sh='<div class="st">🛒 采购清单</div><div class="sl"><h2>📋 食材汇总</h2>';
+  for(const[cn,items]of Object.entries(cats)){
+    const f=items.filter(n=>im[n]);
+    if(!f.length)continue;
+    f.forEach(n=>ui.add(n));
+    sh+=`<div class="ct"><div class="ct-t">${cn}</div>`;
+    f.forEach(n=>{sh+=`<div class="ii"><span>${n}</span><span class="q">约 ¥${im[n].c.toFixed(1)}</span></div>`});
+    sh+='</div>';
+  }
+  const rem=Object.keys(im).filter(n=>!ui.has(n));
+  if(rem.length){sh+=`<div class="ct"><div class="ct-t">其他</div>`;rem.forEach(n=>{sh+=`<div class="ii"><span>${n}</span><span class="q">约 ¥${im[n].c.toFixed(1)}</span></div>`});sh+='</div>'}
+  sh+='</div>';
+  // Summary
+  h+=`<div class="sb"><div class="si"><div class="v${over?' bw':''}">¥${tc.toFixed(0)}</div><div class="l">3天总计</div></div><div class="si"><div class="v${over?' bw':''}">¥${(tc/3).toFixed(0)}</div><div class="l">日均</div></div><div class="si"><div class="v">¥${(tc/pp/3).toFixed(0)}</div><div class="l">人均/天</div></div><div class="si"><div class="v">¥${b*3}</div><div class="l">3天预算</div></div><div class="si"><div class="v${over?' bw':''}">${over?'⚠️ 超出':'✅ 达标'}</div><div class="l">预算状态</div></div></div>`;
+  h+=sh;
+  document.getElementById('out').innerHTML=h;
+}
+function openR(di,t){
+  if(!menu)return;
+  const{d,pp}=menu;
+  const cur=menu.days[di].meals[t];
+  const av=avail(t,d).filter(m=>m.name!==cur.name);
+  if(!av.length){alert('没有更多可选菜品');return}
+  let h=`<div class="mo" onclick="if(event.target===this)closeR()"><div class="md2"><h3>🔄 替换${MN[t]} — ${DN[di]}</h3><p style="color:var(--mt);font-size:.85rem;margin-bottom:12px">当前：${cur.name}（¥${cur.cost.toFixed(0)}）</p>`;
+  av.forEach((m,i)=>{
+    const c=cost(m,pp);
+    h+=`<div class="ro" onclick="doReplace(${di},'${t}',${i})"><div class="rn">${m.name}<span class="mt ${m.v?'tv':'tn'}">${m.v?'素食':'荤菜'}</span></div><div class="rd">~${m.cal}千卡/人 · ${m.ing.map(j=>j.n).join('、')}</div><div class="rc">¥${c.toFixed(0)}</div></div>`;
+  });
+  h+=`<div class="ma2"><button class="btn bo" onclick="closeR()">取消</button></div></div></div>`;
+  document.getElementById('modal').innerHTML=h;
+  document.getElementById('modal').style.display='block';
+}
+function doReplace(di,t,idx){
+  if(!menu)return;
+  const{d,pp}=menu;
+  const av=avail(t,d).filter(m=>m.name!==menu.days[di].meals[t].name);
+  if(idx>=av.length)return;
+  const m=av[idx];
+  menu.days[di].meals[t]={...m,cost:cost(m,pp)};
+  menu.days[di].tc=Object.values(menu.days[di].meals).reduce((s,m)=>s+m.cost,0);
+  menu.tc=menu.days.reduce((s,d)=>s+d.tc,0);
+  closeR();
+  render();
+}
+function closeR(){document.getElementById('modal').style.display='none';document.getElementById('modal').innerHTML=''}
+</script>
+</body>
+</html>
