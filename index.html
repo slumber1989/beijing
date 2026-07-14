@@ -1,460 +1,210 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>投研日报 - 2026年6月23日</title>
+<title>旅行预算计算器</title>
 <style>
-:root {
-  --bg-deep: #0a0e1a;
-  --bg-card: #111827;
-  --bg-card-alt: #1a2332;
-  --accent-red: #ff4757;
-  --accent-green: #2ed573;
-  --accent-gold: #ffa502;
-  --accent-blue: #3742fa;
-  --accent-cyan: #00d2d3;
-  --accent-purple: #a855f7;
-  --text-primary: #f1f2f6;
-  --text-secondary: #a4b0be;
-  --text-dim: #57606f;
-  --border: rgba(255,255,255,0.06);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: var(--bg-deep);
-  color: var(--text-primary);
-  font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
-  width: 1280px; padding: 0;
-}
-
-.hero {
-  position: relative; padding: 40px 48px 32px;
-  background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 40%, #2d1b4e 70%, #0a0e1a 100%);
-  overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; top: -50%; right: -20%;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(255,71,87,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
-.hero-title {
-  font-size: 36px; font-weight: 900; letter-spacing: 3px;
-  background: linear-gradient(135deg, #fff 0%, #ffa502 50%, #ff6348 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.hero-sub { font-size: 14px; color: var(--text-secondary); margin-top: 8px; font-weight: 300; letter-spacing: 1px; }
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.3);
-  border-radius: 8px; padding: 10px 18px;
-}
-.hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-red); }
-.hero-badge-text { font-size: 13px; color: var(--accent-red); font-weight: 600; letter-spacing: 1px; }
-.hero-badge.green { background: rgba(46,213,115,0.15); border-color: rgba(46,213,115,0.3); }
-.hero-badge.green .hero-badge-dot { background: var(--accent-green); }
-.hero-badge.green .hero-badge-text { color: var(--accent-green); }
-.hero-badge.gold { background: rgba(255,165,2,0.15); border-color: rgba(255,165,2,0.3); }
-.hero-badge.gold .hero-badge-dot { background: var(--accent-gold); }
-.hero-badge.gold .hero-badge-text { color: var(--accent-gold); }
-.hero-headline {
-  position: relative; z-index: 1; margin-top: 24px; padding: 16px 20px;
-  background: rgba(255,165,2,0.06); border-left: 3px solid var(--accent-gold);
-  border-radius: 0 8px 8px 0; font-size: 15px; line-height: 1.8;
-  color: var(--accent-gold); font-weight: 500;
-}
-
-.content { padding: 24px 48px 40px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-.section { margin-bottom: 24px; }
-
-.idx-card {
-  background: var(--bg-card); border-radius: 12px; padding: 16px 18px;
-  border: 1px solid var(--border); position: relative; overflow: hidden;
-}
-.idx-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
-.idx-card.up::after { background: linear-gradient(90deg, var(--accent-red), transparent); }
-.idx-card.down::after { background: linear-gradient(90deg, var(--accent-green), transparent); }
-.idx-name { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
-.idx-val { font-size: 24px; font-weight: 700; font-family: 'Menlo', 'Courier New', monospace; }
-.idx-val.up { color: var(--accent-red); }
-.idx-val.down { color: var(--accent-green); }
-.idx-val.flat { color: var(--text-dim); }
-.idx-chg { font-size: 13px; font-family: 'Menlo', monospace; margin-top: 4px; font-weight: 600; }
-.idx-chg.up { color: var(--accent-red); }
-.idx-chg.down { color: var(--accent-green); }
-.idx-tag { position: absolute; top: 12px; right: 14px; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-.idx-tag.live { background: rgba(0,210,211,0.15); color: var(--accent-cyan); }
-.idx-tag.close { background: rgba(168,85,247,0.15); color: #a78bfa; }
-
-.sec-header {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
-  padding-bottom: 10px; border-bottom: 1px solid var(--border);
-}
-.sec-icon { font-size: 20px; }
-.sec-title { font-size: 16px; font-weight: 700; letter-spacing: 1px; }
-.sec-badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 500; }
-
-.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th {
-  text-align: left; color: var(--text-dim); font-weight: 500; padding: 8px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-}
-.data-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); }
-.data-table tr:last-child td { border-bottom: none; }
-.data-table th:not(:first-child), .data-table td:not(:first-child) { text-align: right; }
-.data-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-.up { color: var(--accent-red); }
-.down { color: var(--accent-green); }
-.gold { color: var(--accent-gold); }
-.mono { font-family: 'Menlo', 'Courier New', monospace; }
-
-.chip { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-.chip-fire { background: rgba(255,71,87,0.12); color: var(--accent-red); }
-.chip-gold { background: rgba(255,165,2,0.12); color: var(--accent-gold); }
-.chip-blue { background: rgba(55,66,250,0.12); color: #5f6cff; }
-.chip-cyan { background: rgba(0,210,211,0.12); color: var(--accent-cyan); }
-.chip-limit { background: rgba(255,71,87,0.2); color: #fff; border: 1px solid rgba(255,71,87,0.4); font-weight: 700; }
-.chip-down-limit { background: rgba(46,213,115,0.2); color: #fff; border: 1px solid rgba(46,213,115,0.4); font-weight: 700; }
-
-.card { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
-.card-alt { background: var(--bg-card-alt); }
-
-.fut-card {
-  background: var(--bg-card); border-radius: 10px; padding: 14px 16px;
-  border: 1px solid var(--border); text-align: center;
-}
-.fut-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-.fut-val { font-size: 20px; font-weight: 700; font-family: 'Menlo', monospace; }
-.fut-chg { font-size: 12px; font-family: 'Menlo', monospace; margin-top: 3px; font-weight: 600; }
-
-.news-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.7; display: flex; gap: 10px; }
-.news-item:last-child { border-bottom: none; }
-.news-tag {
-  flex-shrink: 0; font-weight: 700; font-size: 12px; padding: 2px 8px;
-  border-radius: 4px; height: fit-content; margin-top: 2px;
-}
-.news-tag.red { background: rgba(255,71,87,0.15); color: var(--accent-red); }
-.news-tag.gold { background: rgba(255,165,2,0.15); color: var(--accent-gold); }
-.news-tag.blue { background: rgba(55,66,250,0.15); color: #7c83ff; }
-.news-tag.green { background: rgba(46,213,115,0.15); color: var(--accent-green); }
-.news-tag.cyan { background: rgba(0,210,211,0.15); color: var(--accent-cyan); }
-.news-tag.purple { background: rgba(168,85,247,0.15); color: var(--accent-purple); }
-.news-content { color: var(--text-secondary); }
-.news-content strong { color: var(--text-primary); font-weight: 600; }
-
-.sentiment-wrap { background: var(--bg-card); border-radius: 12px; padding: 16px 20px; border: 1px solid var(--border); margin-bottom: 24px; }
-.sentiment-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
-.sentiment-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 2px; }
-.sentiment-bar .bar-up { background: linear-gradient(90deg, var(--accent-red), #ff6b81); border-radius: 5px 0 0 5px; }
-.sentiment-bar .bar-down { background: linear-gradient(90deg, #26d97a, var(--accent-green)); border-radius: 0 5px 5px 0; }
-.sentiment-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); margin-top: 8px; }
-
-.strategy-card {
-  background: linear-gradient(135deg, var(--bg-card) 0%, #151d33 100%);
-  border-radius: 14px; padding: 24px; border: 1px solid rgba(255,165,2,0.15);
-  position: relative; overflow: hidden;
-}
-.strategy-card::before {
-  content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(255,165,2,0.05), transparent 70%);
-}
-.strategy-list { list-style: none; padding: 0; }
-.strategy-list li {
-  padding: 8px 0; font-size: 13px; line-height: 1.7;
-  display: flex; gap: 8px; align-items: flex-start;
-  border-bottom: 1px solid var(--border);
-}
-.strategy-list li:last-child { border-bottom: none; }
-.strategy-bullet { flex-shrink: 0; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-gold); margin-top: 8px; }
-.highlight { color: var(--accent-gold); font-weight: 700; }
-.highlight-red { color: var(--accent-red); font-weight: 700; }
-.highlight-green { color: var(--accent-green); font-weight: 700; }
-
-.alert-banner {
-  margin: 0 48px; padding: 14px 20px;
-  background: linear-gradient(90deg, rgba(255,71,87,0.12), rgba(255,71,87,0.05));
-  border: 1px solid rgba(255,71,87,0.2); border-radius: 0 0 12px 12px;
-  display: flex; align-items: center; gap: 12px;
-}
-.alert-icon { font-size: 20px; }
-.alert-text { font-size: 13px; color: #ff6b81; line-height: 1.6; font-weight: 500; }
-.alert-text strong { color: #fff; }
-
-.timeline { padding-left: 20px; border-left: 2px solid var(--border); }
-.timeline-item { position: relative; padding: 0 0 16px 16px; }
-.timeline-item::before {
-  content: ''; position: absolute; left: -25px; top: 4px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent-gold); border: 2px solid var(--bg-deep);
-}
-.timeline-item.red::before { background: var(--accent-red); }
-.timeline-item.green::before { background: var(--accent-green); }
-.timeline-date { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
-.timeline-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-
-.footer {
-  text-align: center; padding: 24px 48px; color: var(--text-dim); font-size: 11px;
-  border-top: 1px solid var(--border); line-height: 1.8;
-}
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--primary:#2563eb;--primary-light:#dbeafe;--accent:#f59e0b;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#10b981;--danger:#ef4444}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:16px}
+  .container{max-width:720px;margin:0 auto}
+  h1{text-align:center;font-size:1.6rem;margin-bottom:4px;color:var(--primary)}
+  .subtitle{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:20px}
+  .card{background:var(--card);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-group.full{grid-column:1/-1}
+  label{font-size:.82rem;font-weight:600;color:var(--muted)}
+  select,input[type=number]{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.95rem;background:var(--bg);transition:border .2s}
+  select:focus,input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+  .btn-row{display:flex;gap:10px;margin-top:6px}
+  .btn{flex:1;padding:12px;border:none;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;transition:transform .1s,box-shadow .2s}
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(37,99,235,.4)}
+  .btn-reset{background:var(--border);color:var(--muted)}
+  .btn-reset:hover{background:#cbd5e1}
+  .result-card{background:linear-gradient(135deg,var(--primary),#7c3aed);color:#fff;border-radius:16px;padding:20px;margin-bottom:16px;display:none}
+  .result-card.show{display:block;animation:fadeUp .4s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .result-total{text-align:center;margin-bottom:14px}
+  .result-total .amount{font-size:2rem;font-weight:800}
+  .result-total .label{font-size:.8rem;opacity:.85}
+  .breakdown{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .breakdown-item{background:rgba(255,255,255,.15);border-radius:10px;padding:12px;text-align:center}
+  .breakdown-item .bi-label{font-size:.72rem;opacity:.8;margin-bottom:2px}
+  .breakdown-item .bi-value{font-size:1.1rem;font-weight:700}
+  .breakdown-item.highlight{grid-column:1/-1;background:rgba(255,255,255,.25)}
+  .per-person{margin-top:14px;text-align:center;font-size:.9rem;opacity:.9}
+  .per-person strong{font-size:1.3rem}
+  .chart-bar{margin-top:16px}
+  .chart-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.78rem}
+  .chart-label{width:52px;text-align:right;opacity:.85;flex-shrink:0}
+  .chart-track{flex:1;height:18px;background:rgba(255,255,255,.12);border-radius:9px;overflow:hidden}
+  .chart-fill{height:100%;border-radius:9px;transition:width .6s ease}
+  .chart-val{width:60px;opacity:.85;flex-shrink:0}
+  .empty-state{text-align:center;padding:40px 20px;color:var(--muted);font-size:.9rem}
+  .empty-state .icon{font-size:2.4rem;margin-bottom:8px}
+  @media(max-width:480px){
+    .form-grid{grid-template-columns:1fr}
+    .breakdown{grid-template-columns:1fr 1fr}
+    h1{font-size:1.3rem}
+    .result-total .amount{font-size:1.6rem}
+    .breakdown-item .bi-value{font-size:.95rem}
+  }
 </style>
 </head>
 <body>
+<div class="container">
+  <h1>🌏 旅行预算计算器</h1>
+  <p class="subtitle">选择目的地，快速估算旅行花费</p>
 
-<!-- ===== HERO ===== -->
-<div class="hero">
-  <div class="hero-top">
-    <div>
-      <div class="hero-title">投研日报</div>
-      <div class="hero-sub">2026年6月23日 星期二 · 收盘总结</div>
+  <div class="card">
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>📍 目的地</label>
+        <select id="dest">
+          <option value="">请选择目的地</option>
+          <option value="tokyo">东京 · 日本</option>
+          <option value="bangkok">曼谷 · 泰国</option>
+          <option value="singapore">新加坡</option>
+          <option value="seoul">首尔 · 韩国</option>
+          <option value="bali">巴厘岛 · 印尼</option>
+          <option value="paris">巴黎 · 法国</option>
+          <option value="london">伦敦 · 英国</option>
+          <option value="newyork">纽约 · 美国</option>
+          <option value="sydney">悉尼 · 澳洲</option>
+          <option value="dubai">迪拜 · 阿联酋</option>
+          <option value="sanya">三亚 · 中国</option>
+          <option value="chengdu">成都 · 中国</option>
+          <option value="lijiang">丽江 · 中国</option>
+          <option value="xiamen">厦门 · 中国</option>
+          <option value="hongkong">香港</option>
+          <option value="taipei">台北</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>📅 旅行天数</label>
+        <input type="number" id="days" min="1" max="90" value="5" placeholder="天数">
+      </div>
+      <div class="form-group">
+        <label>👥 出行人数</label>
+        <input type="number" id="people" min="1" max="20" value="2" placeholder="人数">
+      </div>
+      <div class="form-group full">
+        <label>💰 消费档次</label>
+        <select id="tier">
+          <option value="budget">经济出行 · 省钱优先</option>
+          <option value="comfort" selected>舒适出行 · 性价比之选</option>
+          <option value="luxury">豪华出行 · 品质享受</option>
+        </select>
+      </div>
     </div>
-    <div class="hero-badge">
-      <div class="hero-badge-dot"></div>
-      <div class="hero-badge-text">全线下跌</div>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-primary" onclick="calc()">🧮 计算预算</button>
+      <button class="btn btn-reset" onclick="reset()">↺ 重置</button>
     </div>
   </div>
-  <div class="hero-headline">
-    🔴 <strong>剧烈调整：</strong>创业板指创年内最大跌幅-3.84%，两市超4800只个股下跌、超300只跌停。市场从午盘"分歧切换"演变为午后"一致性杀跌"，风格切换窗口遭遇系统性抛压。沪深两市成交3.44万亿。
+
+  <div class="result-card" id="result">
+    <div class="result-total">
+      <div class="label">预估总费用</div>
+      <div class="amount" id="totalAmount">¥0</div>
+    </div>
+    <div class="breakdown" id="breakdown"></div>
+    <div class="per-person" id="perPerson"></div>
+    <div class="chart-bar" id="chartBar"></div>
+  </div>
+
+  <div class="empty-state" id="empty">
+    <div class="icon">🗺️</div>
+    <div>选择目的地后点击「计算预算」<br>即可查看详细费用估算</div>
   </div>
 </div>
 
-<!-- ===== ALERT ===== -->
-<div class="alert-banner">
-  <div class="alert-icon">⚠️</div>
-  <div class="alert-text"><strong>风险预警</strong> — 创业板指单日跌3.84%创年内最大跌幅，K线形成"阴包阳"结构。半导体板块超150只个股跌超9%，前期热门方向集体重挫。市场进入一致性调整阶段，短期仍有惯性下探压力。</div>
-</div>
+<script>
+const DATA={
+  tokyo:{name:"东京",transport:[2500,4000,8000],hotel:[300,800,2500],food:[150,350,800],ticket:[100,200,400]},
+  bangkok:{name:"曼谷",transport:[1500,2800,5500],hotel:[120,400,1200],food:[60,150,400],ticket:[50,100,250]},
+  singapore:{name:"新加坡",transport:[2000,3500,7000],hotel:[350,900,2800],food:[120,300,700],ticket:[80,180,400]},
+  seoul:{name:"首尔",transport:[1800,3200,6500],hotel:[280,700,2000],food:[120,280,650],ticket:[80,150,350]},
+  bali:{name:"巴厘岛",transport:[2000,3500,6000],hotel:[150,500,1800],food:[50,120,350],ticket:[40,80,200]},
+  paris:{name:"巴黎",transport:[4000,7000,15000],hotel:[500,1200,4000],food:[200,500,1200],ticket:[120,250,500]},
+  london:{name:"伦敦",transport:[4500,8000,16000],hotel:[500,1100,3500],food:[180,450,1100],ticket:[120,250,500]},
+  newyork:{name:"纽约",transport:[5000,9000,18000],hotel:[600,1400,4500],food:[200,500,1300],ticket:[120,250,550]},
+  sydney:{name:"悉尼",transport:[3500,6000,12000],hotel:[400,1000,3000],food:[150,380,900],ticket:[100,200,450]},
+  dubai:{name:"迪拜",transport:[3000,5500,11000],hotel:[300,900,3500],food:[100,280,800],ticket:[80,180,450]},
+  sanya:{name:"三亚",transport:[800,1800,4000],hotel:[200,600,2000],food:[80,180,500],ticket:[50,100,250]},
+  chengdu:{name:"成都",transport:[500,1200,3000],hotel:[120,350,1200],food:[60,120,350],ticket:[40,80,200]},
+  lijiang:{name:"丽江",transport:[600,1500,3500],hotel:[100,300,1000],food:[50,100,300],ticket:[40,80,180]},
+  xiamen:{name:"厦门",transport:[500,1200,3000],hotel:[150,400,1200],food:[60,120,350],ticket:[40,80,180]},
+  hongkong:{name:"香港",transport:[1500,2800,5500],hotel:[400,1000,3000],food:[120,300,700],ticket:[80,150,350]},
+  taipei:{name:"台北",transport:[1200,2200,5000],hotel:[250,650,2000],food:[80,200,500],ticket:[60,120,280]}
+};
+const TIER_IDX={budget:0,comfort:1,luxury:2};
+const TIER_LABEL={budget:"经济",comfort:"舒适",luxury:"豪华"};
+const COLORS={transport:"#3b82f6",hotel:"#8b5cf6",food:"#f59e0b",ticket:"#10b981",reserve:"#ef4444"};
+const ITEM_LABEL={transport:"🚗 交通",hotel:"🏨 住宿",food:"🍜 餐饮",ticket:"🎫 门票",reserve:"🛡️ 备用金"};
 
-<div class="content">
+function calc(){
+  const dk=document.getElementById("dest").value;
+  const days=parseInt(document.getElementById("days").value)||1;
+  const people=parseInt(document.getElementById("people").value)||1;
+  const tier=document.getElementById("tier").value;
+  if(!dk){alert("请先选择目的地");return}
+  const d=DATA[dk];
+  const ti=TIER_IDX[tier];
+  const transport=d.transport[ti];
+  const hotel=d.hotel[ti]*days;
+  const food=d.food[ti]*days*people;
+  const ticket=d.ticket[ti]*days;
+  const reserve=Math.round((transport+hotel+food+ticket)*0.1);
+  const total=transport+hotel+food+ticket+reserve;
+  const perPerson=Math.round(total/people);
 
-  <!-- ===== 市场情绪概览 ===== -->
-  <div class="section">
-    <div class="sentiment-wrap">
-      <div class="sentiment-meta">
-        <span>📈 上涨: 27 家</span>
-        <span>📉 下跌: 4,800+ 家</span>
-        <span>🔥 涨停: 27 家</span>
-        <span>💀 跌停: 300+ 家</span>
-      </div>
-      <div class="sentiment-bar">
-        <div class="bar-up" style="width:0.5%"></div>
-        <div class="bar-down" style="width:99.5%"></div>
-      </div>
-      <div class="sentiment-footer">
-        <span>两市成交: <span class="mono gold">3.44万亿</span>（缩量约3000亿）</span>
-        <span>北向资金: <span class="mono down">小幅净流出</span></span>
-      </div>
-    </div>
-  </div>
+  document.getElementById("totalAmount").textContent="¥"+total.toLocaleString();
+  const items=[
+    {key:"transport",value:transport},
+    {key:"hotel",value:hotel},
+    {key:"food",value:food},
+    {key:"ticket",value:ticket},
+    {key:"reserve",value:reserve}
+  ];
+  let html="";
+  items.forEach(it=>{
+    html+=`<div class="breakdown-item"><div class="bi-label">${ITEM_LABEL[it.key]}</div><div class="bi-value">¥${it.value.toLocaleString()}</div></div>`;
+  });
+  document.getElementById("breakdown").innerHTML=html;
+  document.getElementById("perPerson").innerHTML=`👥 人均费用：<strong>¥${perPerson.toLocaleString()}</strong>（${people}人）<br><span style="font-size:.72rem;opacity:.7">${d.name} · ${days}天 · ${TIER_LABEL[tier]}档</span>`;
 
-  <!-- ===== A股指数 ===== -->
-  <div class="section">
-    <div class="sec-header">
-      <span class="sec-icon">📊</span>
-      <span class="sec-title">A股主要指数</span>
-      <span class="sec-badge chip-fire">全线下跌</span>
-    </div>
-    <div class="grid-4">
-      <div class="idx-card down">
-        <div class="idx-name">上证指数</div>
-        <div class="idx-val down">4,106.25</div>
-        <div class="idx-chg down">-56.85 (-1.37%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">深证成指</div>
-        <div class="idx-val down">15,854.20</div>
-        <div class="idx-chg down">-518.30 (-3.17%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">创业板指 ⚠️</div>
-        <div class="idx-val down">4,192.19</div>
-        <div class="idx-chg down">-167.20 (-3.84%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">科创50</div>
-        <div class="idx-val down">1,916.21</div>
-        <div class="idx-chg down">-32.72 (-1.68%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">上证50</div>
-        <div class="idx-val down">2,926.83</div>
-        <div class="idx-chg down">-85.82 (-2.85%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">沪深300</div>
-        <div class="idx-val down">4,919.39</div>
-        <div class="idx-chg down">-140.27 (-2.77%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card down">
-        <div class="idx-name">中证500</div>
-        <div class="idx-val down">8,688.59</div>
-        <div class="idx-chg down">-180.19 (-2.03%)</div>
-        <span class="idx-tag close">收</span>
-      </div>
-      <div class="idx-card up">
-        <div class="idx-name">北证50 🟢</div>
-        <div class="idx-val up">1,318.05</div>
-        <div class="idx-chg up">+0.77%</div>
-        <span class="idx-tag close">唯一红盘</span>
-      </div>
-    </div>
-  </div>
+  // chart
+  const maxVal=Math.max(...items.map(i=>i.value));
+  let chartHtml="";
+  items.forEach(it=>{
+    const pct=maxVal?Math.round(it.value/maxVal*100):0;
+    chartHtml+=`<div class="chart-row"><span class="chart-label">${ITEM_LABEL[it.key].slice(2)}</span><div class="chart-track"><div class="chart-fill" style="width:${pct}%;background:${COLORS[it.key]}"></div></div><span class="chart-val">¥${it.value.toLocaleString()}</span></div>`;
+  });
+  document.getElementById("chartBar").innerHTML=chartHtml;
 
-  <!-- ===== 全球市场 + 商品 ===== -->
-  <div class="section grid-2">
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">🌍</span><span class="sec-title">全球市场</span><span class="sec-badge chip-cyan">最新</span></div>
-      <table class="data-table">
-        <thead><tr><th>市场</th><th>最新</th><th>涨跌</th><th>日期</th></tr></thead>
-        <tbody>
-          <tr><td>道琼斯</td><td class="mono">51,712.71</td><td class="up">+0.29%</td><td>06/22</td></tr>
-          <tr><td>纳斯达克</td><td class="mono">26,166.60</td><td class="down">-1.32%</td><td>06/22</td></tr>
-          <tr><td>标普500</td><td class="mono">7,472.79</td><td class="down">-0.37%</td><td>06/22</td></tr>
-          <tr><td>恒生指数</td><td class="mono">23,336.28</td><td class="down">-1.82%</td><td>06/23</td></tr>
-          <tr><td>富时100</td><td class="mono">10,391.55</td><td class="down">-0.44%</td><td>06/23</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">🛢️</span><span class="sec-title">大宗商品</span></div>
-      <div class="grid-2" style="gap:10px">
-        <div class="fut-card">
-          <div class="fut-label">COMEX黄金</div>
-          <div class="fut-val down">4,129.26</div>
-          <div class="fut-chg down">-1.75 (-0.04%)</div>
-        </div>
-        <div class="fut-card">
-          <div class="fut-label">COMEX白银 ⚠️</div>
-          <div class="fut-val down">62.57</div>
-          <div class="fut-chg down">-5.29 (-7.80%)</div>
-        </div>
-        <div class="fut-card">
-          <div class="fut-label">WTI原油</div>
-          <div class="fut-val down">73.58</div>
-          <div class="fut-chg down">-0.38 (-0.51%)</div>
-        </div>
-        <div class="fut-card">
-          <div class="fut-label">LME铜</div>
-          <div class="fut-val down">13,400.20</div>
-          <div class="fut-chg down">-1.82 (-0.01%)</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  document.getElementById("result").classList.add("show");
+  document.getElementById("empty").style.display="none";
+}
 
-  <!-- ===== 板块排行 ===== -->
-  <div class="section grid-2">
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">🔥</span><span class="sec-title">领涨/抗跌板块</span></div>
-      <table class="data-table">
-        <thead><tr><th>板块</th><th>涨跌%</th><th>代表个股</th></tr></thead>
-        <tbody>
-          <tr><td>医药生物</td><td class="down">相对抗跌</td><td>新华制药 涨停、亨迪药业 +10%</td></tr>
-          <tr><td>非银金融</td><td class="down">相对抗跌</td><td>长江证券 2连板、银之杰 20cm涨停</td></tr>
-          <tr><td>北证50</td><td class="up">+0.77%</td><td>唯一红盘指数</td></tr>
-          <tr><td>化工</td><td class="down">相对抗跌</td><td>早盘资金流入</td></tr>
-          <tr><td>CRO/重组蛋白</td><td class="down">早盘活跃</td><td>午后涨幅收窄</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">📉</span><span class="sec-title">领跌板块</span></div>
-      <table class="data-table">
-        <thead><tr><th>板块</th><th>跌幅特征</th><th>代表个股</th></tr></thead>
-        <tbody>
-          <tr><td>半导体</td><td class="down">超150只跌超9%</td><td>中芯国际 -8%、中微公司 重挫</td></tr>
-          <tr><td>有色金属</td><td class="down">全线走弱</td><td>中稀有色 跌停、铜陵有色 -9%</td></tr>
-          <tr><td>CPO概念</td><td class="down">大幅回调</td><td>源杰科技、蘅东光 下跌</td></tr>
-          <tr><td>PCB概念</td><td class="down">多股跌停</td><td>板块深度调整</td></tr>
-          <tr><td>锂电池</td><td class="down">同步调整</td><td>宁德时代 -3%、阳光电源 -7%</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+function reset(){
+  document.getElementById("dest").value="";
+  document.getElementById("days").value=5;
+  document.getElementById("people").value=2;
+  document.getElementById("tier").value="comfort";
+  document.getElementById("result").classList.remove("show");
+  document.getElementById("empty").style.display="";
+}
 
-  <!-- ===== 行情分阶段回顾 ===== -->
-  <div class="section">
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">⏱️</span><span class="sec-title">分阶段行情回顾</span><span class="sec-badge chip-gold">两段式演变</span></div>
-      <div class="timeline">
-        <div class="timeline-item green">
-          <div class="timeline-date">🕤 9:30 - 11:30 · 午盘阶段</div>
-          <div class="timeline-text">
-            <strong class="highlight-green">缩量分歧、高低切换</strong><br>
-            沪指跌0.37%，深证跌1.83%，创业板跌2.27%。但<strong>超3300只个股上涨、超百股涨停</strong>。医药十余股涨停，长江证券2连板，资金从科技权重向医药、金融、化工低位方向有序迁徙。午盘成交<strong>2.32万亿</strong>（较昨日同期缩量1870亿）。
-          </div>
-        </div>
-        <div class="timeline-item red">
-          <div class="timeline-date">🕐 13:00 - 15:00 · 午后阶段</div>
-          <div class="timeline-text">
-            <strong class="highlight-red">放量下杀、一致性情下跌</strong><br>
-            市场全面逆转：超<strong>4800只个股跌停，跌停超300只</strong>，涨停萎缩至27只。创业板指从跌2.27%扩大至跌3.84%，沪指从跌0.37%扩大至跌1.37%。午后成交约<strong>1.12万亿</strong>，尾盘量能温和放大，抛压仍在释放。
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 要闻资讯 ===== -->
-  <div class="section">
-    <div class="card">
-      <div class="sec-header"><span class="sec-icon">📰</span><span class="sec-title">重要资讯</span></div>
-      <div class="news-item">
-        <span class="news-tag cyan">央行</span>
-        <div class="news-content"><strong>央行今日净投放750亿元。</strong>以1.40%利率开展5245亿元7天期逆回购，对冲4495亿元到期，季末流动性边际改善。</div>
-      </div>
-      <div class="news-item">
-        <span class="news-tag gold">全球</span>
-        <div class="news-content"><strong>夏季达沃斯论坛今日大连开幕。</strong>90多个国家和地区的1700余名嘉宾参会，论坛期间或有政策信号释放。</div>
-      </div>
-      <div class="news-item">
-        <span class="news-tag red">监管</span>
-        <div class="news-content"><strong>中船特气今日起停牌核查。</strong>自5/11至6/22累计涨幅388.77%，多次触及异常波动。叠加节前长盈通停牌、七十余家集中提示风险，监管降温信号持续释放。</div>
-      </div>
-      <div class="news-item">
-        <span class="news-tag green">政策</span>
-        <div class="news-content"><strong>《利用外资固稳促优行动方案》发布。</strong>支持外资参与医药等产业，研究药品分段生产细则，催化今日医药板块逆势走强。</div>
-      </div>
-      <div class="news-item">
-        <span class="news-tag blue">公司</span>
-        <div class="news-content"><strong>创业板指权重股集体重挫：</strong>胜宏科技 -7.44%、阳光电源 -7%+、三环集团 -6.8%、中际旭创 -5.23%，AI算力产业链跌幅靠前。</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 策略观点 ===== -->
-  <div class="section">
-    <div class="strategy-card">
-      <div class="sec-header"><span class="sec-icon">🎯</span><span class="sec-title">策略观点</span></div>
-      <ul class="strategy-list">
-        <li><span class="strategy-bullet"></span><strong>调整定性：</strong>今日为"午盘分歧切换 → 午后一致性下杀"的两段式演变。创业板指<span class="highlight-red">阴包阳结构确认短期调整压力</span>，K线完全覆盖昨日涨幅，短期或有惯性下探。</li>
-        <li><span class="strategy-bullet"></span><strong>量能是关键观测指标：</strong>全天成交3.44万亿仍处历史高位。若后续量能<span class="highlight-green">逐步萎缩至3万亿以下且跌幅收窄</span>，则调整动能可能逐步衰竭；若量能维持高位且继续下跌，调整仍有空间。</li>
-        <li><span class="strategy-bullet"></span><strong>风格切换方向：</strong>医药、金融等低位方向在调整中表现相对抗跌。外资行动方案对医药的政策催化具有持续性，陆家嘴论坛政策红利支撑金融板块。<span class="highlight">关注低位方向的轮动延续性。</span></li>
-        <li><span class="strategy-bullet"></span><strong>结构性机会：</strong>北证50逆势涨0.77%成为主要指数中唯一红盘。部分资金在系统性调整中积极寻找结构性机会，<span class="highlight">北交所方向值得跟踪。</span></li>
-        <li><span class="strategy-bullet"></span><strong>风险提示：</strong><span class="highlight-red">半导体、CPO、PCB等前期热门方向短期仍面临较大调整压力。</span>中船特气停牌核查释放监管降温信号。关注韩国股市暴跌对全球投机情绪的传导。</li>
-        <li><span class="strategy-bullet"></span><strong>关注信号：</strong>①量能是否缩至3万亿以下 ②半导体/CPO何时出现止跌信号 ③创业板指4100点附近支撑 ④达沃斯论坛政策信号。</li>
-      </ul>
-    </div>
-  </div>
-
-</div>
-
-<!-- ===== FOOTER ===== -->
-<div class="footer">
-  ⚠️ 免责声明：本报告仅供研究参考，不构成投资建议。投资有风险，入市需谨慎。<br>
-  数据来源：腾讯行情、财联社、东方财富、新浪财经 · 生成时间：2026-06-23 21:14 CST
-</div>
-
+// auto-calc on change
+document.querySelectorAll("#dest,#days,#people,#tier").forEach(el=>{
+  el.addEventListener("change",calc);
+  el.addEventListener("input",calc);
+});
+</script>
 </body>
 </html>
