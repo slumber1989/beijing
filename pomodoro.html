@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🍅 番茄工作计时器</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --focus:#e74c3c;--rest:#27ae60;--bg:#1a1a2e;--card:#16213e;
+    --text:#eee;--muted:#888;--accent:#f39c12;--border:#2a2a4a;
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;display:flex;
+    flex-direction:column;align-items:center;overflow-x:hidden}
+  
+  .container{width:100%;max-width:480px;padding:20px;display:flex;
+    flex-direction:column;gap:20px;min-height:100vh}
+  
+  h1{font-size:1.5rem;text-align:center;padding:10px 0;
+    background:linear-gradient(135deg,var(--focus),var(--accent));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+  /* Mode Tabs */
+  .mode-tabs{display:flex;gap:8px;justify-content:center}
+  .mode-tab{padding:8px 20px;border-radius:20px;border:2px solid var(--border);
+    background:transparent;color:var(--muted);cursor:pointer;font-size:.9rem;
+    transition:all .3s}
+  .mode-tab.active{border-color:var(--focus);color:var(--text);
+    background:rgba(231,76,60,.15)}
+  .mode-tab.active.rest{border-color:var(--rest);
+    background:rgba(39,174,96,.15)}
+
+  /* Timer Circle */
+  .timer-wrap{display:flex;justify-content:center;position:relative}
+  .timer-circle{width:240px;height:240px;border-radius:50%;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--card);box-shadow:0 0 40px rgba(0,0,0,.3)}
+  .timer-circle svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
+  .timer-circle circle{fill:none;stroke-width:6}
+  .track{stroke:var(--border)}
+  .progress{stroke:var(--focus);stroke-linecap:round;transition:stroke .3s}
+  .progress.rest{stroke:var(--rest)}
+  .timer-display{text-align:center;z-index:1}
+  .time{font-size:3.2rem;font-weight:700;font-variant-numeric:tabular-nums;
+    letter-spacing:2px}
+  .phase-label{font-size:.85rem;color:var(--muted);margin-top:4px}
+
+  /* Controls */
+  .controls{display:flex;gap:12px;justify-content:center}
+  .btn{padding:12px 28px;border-radius:12px;border:none;font-size:1rem;
+    font-weight:600;cursor:pointer;transition:all .2s}
+  .btn:active{transform:scale(.95)}
+  .btn-primary{background:var(--focus);color:#fff}
+  .btn-primary.rest-mode{background:var(--rest)}
+  .btn-secondary{background:var(--card);color:var(--text);
+    border:1px solid var(--border)}
+  .btn-small{padding:6px 14px;font-size:.8rem;border-radius:8px}
+
+  /* Task Input */
+  .task-section{background:var(--card);border-radius:16px;padding:16px;
+    border:1px solid var(--border)}
+  .task-input-wrap{display:flex;gap:8px}
+  .task-input{flex:1;padding:10px 14px;border-radius:10px;border:1px solid var(--border);
+    background:var(--bg);color:var(--text);font-size:.9rem;outline:none}
+  .task-input:focus{border-color:var(--accent)}
+  .task-input::placeholder{color:var(--muted)}
+
+  /* Task List */
+  .task-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;
+    max-height:200px;overflow-y:auto}
+  .task-item{display:flex;align-items:center;gap:8px;padding:8px 12px;
+    border-radius:8px;background:rgba(255,255,255,.03);font-size:.85rem}
+  .task-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .task-item .dot.focus{background:var(--focus)}
+  .task-item .dot.rest{background:var(--rest)}
+  .task-item .name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .task-item .dur{color:var(--muted);font-size:.8rem;flex-shrink:0}
+  .task-item .del{color:var(--muted);cursor:pointer;font-size:1rem;
+    line-height:1;opacity:.5;transition:opacity .2s}
+  .task-item .del:hover{opacity:1;color:var(--focus)}
+  .empty-hint{text-align:center;color:var(--muted);font-size:.85rem;padding:12px 0}
+
+  /* Stats */
+  .stats{background:var(--card);border-radius:16px;padding:16px;
+    border:1px solid var(--border)}
+  .stats h2{font-size:1rem;margin-bottom:12px;color:var(--accent)}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .stat-card{text-align:center;padding:10px;border-radius:10px;
+    background:rgba(255,255,255,.03)}
+  .stat-val{font-size:1.6rem;font-weight:700}
+  .stat-val.focus-c{color:var(--focus)}
+  .stat-val.rest-c{color:var(--rest)}
+  .stat-val.total-c{color:var(--accent)}
+  .stat-lbl{font-size:.75rem;color:var(--muted);margin-top:4px}
+
+  /* Settings Modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:20px}
+  .modal-bg.show{display:flex}
+  .modal{background:var(--card);border-radius:20px;padding:24px;
+    max-width:360px;width:100%;border:1px solid var(--border)}
+  .modal h2{font-size:1.1rem;margin-bottom:16px;color:var(--accent)}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px}
+  .setting-row label{font-size:.9rem}
+  .setting-row input{width:70px;padding:6px 10px;border-radius:8px;
+    border:1px solid var(--border);background:var(--bg);color:var(--text);
+    font-size:.9rem;text-align:center;outline:none}
+  .setting-row input:focus{border-color:var(--accent)}
+
+  /* Footer */
+  .footer{text-align:center;padding:10px;font-size:.75rem;color:var(--muted)}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+  /* Animations */
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+  .running .time{animation:pulse 2s ease-in-out infinite}
+  .running .progress{filter:drop-shadow(0 0 8px currentColor)}
+
+  /* Responsive */
+  @media(max-width:380px){
+    .timer-circle{width:200px;height:200px}
+    .time{font-size:2.6rem}
+    .stats-grid{grid-template-columns:1fr 1fr 1fr}
+    .stat-val{font-size:1.3rem}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🍅 番茄工作计时器</h1>
+
+  <!-- Mode Tabs -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" data-mode="focus" onclick="switchMode('focus')">🎯 专注</button>
+    <button class="mode-tab" data-mode="rest" onclick="switchMode('rest')">☕ 休息</button>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-wrap">
+    <div class="timer-circle" id="timerCircle">
+      <svg width="100%" height="100%" viewBox="0 0 240 240">
+        <circle class="track" cx="120" cy="120" r="110"/>
+        <circle class="progress" id="progressRing" cx="120" cy="120" r="110"
+          stroke-dasharray="691.15" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-display">
+        <div class="time" id="timeDisplay">25:00</div>
+        <div class="phase-label" id="phaseLabel">专注时间</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnStart" onclick="toggleTimer()">▶ 开始</button>
+    <button class="btn btn-secondary" onclick="resetTimer()">↻ 重置</button>
+    <button class="btn btn-secondary" onclick="openSettings()">⚙</button>
+  </div>
+
+  <!-- Task Input -->
+  <div class="task-section">
+    <div class="task-input-wrap">
+      <input class="task-input" id="taskInput" placeholder="输入当前任务..." maxlength="50">
+      <button class="btn btn-primary btn-small" onclick="addTask()">添加</button>
+    </div>
+    <div class="task-list" id="taskList"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <h2>📊 今日统计</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val focus-c" id="statFocus">0</div>
+        <div class="stat-lbl">专注(分钟)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val rest-c" id="statRest">0</div>
+        <div class="stat-lbl">休息(分钟)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val total-c" id="statPomo">0</div>
+        <div class="stat-lbl">完成番茄</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">数据保存在浏览器本地 · 关闭不丢失</div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-bg" id="settingsModal" onclick="closeSettingsOutside(event)">
+  <div class="modal">
+    <h2>⚙ 计时设置</h2>
+    <div class="setting-row">
+      <label>专注时长(分钟)</label>
+      <input type="number" id="setFocus" min="1" max="120" value="25">
+    </div>
+    <div class="setting-row">
+      <label>休息时长(分钟)</label>
+      <input type="number" id="setRest" min="1" max="60" value="5">
+    </div>
+    <div class="setting-row">
+      <label>声音提醒</label>
+      <input type="checkbox" id="setSound" checked>
+    </div>
+    <div style="text-align:right;margin-top:16px">
+      <button class="btn btn-primary btn-small" onclick="saveSettings()">保存</button>
+      <button class="btn btn-secondary btn-small" onclick="closeSettings()">取消</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ State ============
+const CIRCUM = 2 * Math.PI * 110; // ~691.15
+let config = { focusMin: 25, restMin: 5, sound: true };
+let state = {
+  mode: 'focus',      // 'focus' | 'rest'
+  running: false,
+  paused: false,
+  totalSec: 25*60,
+  remainSec: 25*60,
+  intervalId: null,
+  currentTask: ''
+};
+let records = []; // {task, mode, durationMin, ts}
+
+// ============ Load ============
+function loadData(){
+  try{
+    const c = localStorage.getItem('pomo_config');
+    if(c) config = {...config,...JSON.parse(c)};
+    const r = localStorage.getItem('pomo_records');
+    if(r) records = JSON.parse(r);
+  }catch(e){}
+  applyConfig();
+  renderTasks();
+  renderStats();
+}
+function saveData(){
+  localStorage.setItem('pomo_config',JSON.stringify(config));
+  localStorage.setItem('pomo_records',JSON.stringify(records));
+}
+function applyConfig(){
+  if(state.mode==='focus') state.totalSec = config.focusMin*60;
+  else state.totalSec = config.restMin*60;
+  state.remainSec = state.totalSec;
+  updateDisplay();
+  document.getElementById('setFocus').value = config.focusMin;
+  document.getElementById('setRest').value = config.restMin;
+  document.getElementById('setSound').checked = config.sound;
+}
+
+// ============ Timer ============
+function switchMode(mode){
+  if(state.running) return; // stop first
+  state.mode = mode;
+  // tabs
+  document.querySelectorAll('.mode-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.mode===mode);
+    t.classList.toggle('rest', mode==='rest' && t.dataset.mode===mode);
+  });
+  // ring color
+  document.getElementById('progressRing').classList.toggle('rest', mode==='rest');
+  // button color
+  document.getElementById('btnStart').classList.toggle('rest-mode', mode==='rest');
+  // label
+  document.getElementById('phaseLabel').textContent = mode==='focus'?'专注时间':'休息时间';
+  applyConfig();
+}
+
+function updateDisplay(){
+  const m = Math.floor(state.remainSec/60);
+  const s = state.remainSec%60;
+  document.getElementById('timeDisplay').textContent =
+    String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  // ring
+  const pct = 1 - state.remainSec/state.totalSec;
+  document.getElementById('progressRing').setAttribute('stroke-dashoffset',
+    (pct*CIRCUM).toString());
+}
+
+function toggleTimer(){
+  if(state.running && !state.paused){
+    // pause
+    state.paused = true;
+    clearInterval(state.intervalId);
+    document.getElementById('btnStart').textContent = '▶ 继续';
+    document.getElementById('timerCircle').classList.remove('running');
+  } else {
+    // start / resume
+    state.running = true;
+    state.paused = false;
+    state.currentTask = document.getElementById('taskInput').value.trim() || '未命名任务';
+    document.getElementById('btnStart').textContent = '⏸ 暂停';
+    document.getElementById('timerCircle').classList.add('running');
+    // disable mode tabs while running
+    document.querySelectorAll('.mode-tab').forEach(t=>t.style.pointerEvents='none');
+    state.intervalId = setInterval(tick, 1000);
+  }
+}
+
+function tick(){
+  state.remainSec--;
+  if(state.remainSec <= 0){
+    state.remainSec = 0;
+    updateDisplay();
+    completeTimer();
+    return;
+  }
+  updateDisplay();
+}
+
+function completeTimer(){
+  clearInterval(state.intervalId);
+  state.running = false;
+  state.paused = false;
+  document.getElementById('btnStart').textContent = '▶ 开始';
+  document.getElementById('timerCircle').classList.remove('running');
+  document.querySelectorAll('.mode-tab').forEach(t=>t.style.pointerEvents='auto');
+
+  // record
+  const dur = state.mode==='focus' ? config.focusMin : config.restMin;
+  records.push({
+    task: state.currentTask,
+    mode: state.mode,
+    durationMin: dur,
+    ts: Date.now()
+  });
+  saveData();
+  renderTasks();
+  renderStats();
+
+  // sound
+  if(config.sound) playAlarm();
+
+  // auto suggest switch
+  if(state.mode==='focus'){
+    switchMode('rest');
+  } else {
+    switchMode('focus');
+  }
+}
+
+function resetTimer(){
+  clearInterval(state.intervalId);
+  state.running = false;
+  state.paused = false;
+  state.remainSec = state.totalSec;
+  document.getElementById('btnStart').textContent = '▶ 开始';
+  document.getElementById('timerCircle').classList.remove('running');
+  document.querySelectorAll('.mode-tab').forEach(t=>t.style.pointerEvents='auto');
+  updateDisplay();
+}
+
+// ============ Sound ============
+function playAlarm(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    // play 3 beeps
+    [0, 0.25, 0.5].forEach(offset=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = state.mode==='focus' ? 880 : 660;
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0.3, ctx.currentTime+offset);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime+offset+0.2);
+      osc.start(ctx.currentTime+offset);
+      osc.stop(ctx.currentTime+offset+0.2);
+    });
+  }catch(e){}
+}
+
+// ============ Tasks ============
+function addTask(){
+  const input = document.getElementById('taskInput');
+  const name = input.value.trim();
+  if(!name) return;
+  records.push({task:name, mode:'focus', durationMin:0, ts:Date.now(), isTask:true});
+  saveData();
+  input.value = '';
+  renderTasks();
+}
+
+function deleteTask(idx){
+  records.splice(idx,1);
+  saveData();
+  renderTasks();
+  renderStats();
+}
+
+function renderTasks(){
+  const list = document.getElementById('taskList');
+  const today = getToday();
+  const todayRecs = records.filter(r=>{
+    const d = new Date(r.ts);
+    return d.toDateString()===today && r.durationMin>0;
+  });
+  if(todayRecs.length===0){
+    list.innerHTML = '<div class="empty-hint">暂无记录，开始你的第一个番茄吧 🍅</div>';
+    return;
+  }
+  list.innerHTML = todayRecs.map((r,i)=>`
+    <div class="task-item">
+      <span class="dot ${r.mode}"></span>
+      <span class="name">${esc(r.task)}</span>
+      <span class="dur">${r.durationMin}min</span>
+    </div>
+  `).join('');
+}
+
+function renderStats(){
+  const today = getToday();
+  const todayRecs = records.filter(r=>{
+    const d = new Date(r.ts);
+    return d.toDateString()===today && r.durationMin>0;
+  });
+  const focusMin = todayRecs.filter(r=>r.mode==='focus').reduce((s,r)=>s+r.durationMin,0);
+  const restMin = todayRecs.filter(r=>r.mode==='rest').reduce((s,r)=>s+r.durationMin,0);
+  const pomo = todayRecs.filter(r=>r.mode==='focus').length;
+  document.getElementById('statFocus').textContent = focusMin;
+  document.getElementById('statRest').textContent = restMin;
+  document.getElementById('statPomo').textContent = pomo;
+}
+
+function getToday(){ return new Date().toDateString(); }
+function esc(s){ const d=document.createElement('div');d.textContent=s;return d.innerHTML; }
+
+// ============ Settings ============
+function openSettings(){
+  document.getElementById('settingsModal').classList.add('show');
+  document.getElementById('setFocus').value = config.focusMin;
+  document.getElementById('setRest').value = config.restMin;
+  document.getElementById('setSound').checked = config.sound;
+}
+function closeSettings(){
+  document.getElementById('settingsModal').classList.remove('show');
+}
+function closeSettingsOutside(e){
+  if(e.target===document.getElementById('settingsModal')) closeSettings();
+}
+function saveSettings(){
+  const f = parseInt(document.getElementById('setFocus').value)||25;
+  const r = parseInt(document.getElementById('setRest').value)||5;
+  config.focusMin = Math.max(1,Math.min(120,f));
+  config.restMin = Math.max(1,Math.min(60,r));
+  config.sound = document.getElementById('setSound').checked;
+  saveData();
+  applyConfig();
+  closeSettings();
+}
+
+// Enter key to add task
+document.getElementById('taskInput').addEventListener('keydown', e=>{
+  if(e.key==='Enter') addTask();
+});
+
+// Init
+loadData();
+</script>
+</body>
+</html>
