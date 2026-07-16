@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🍅 番茄工作计时器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --focus-from:#ff9a9e;--focus-to:#fad0c4;
+  --break-from:#a1c4fd;--break-to:#c2e9fb;
+  --bg-from:var(--focus-from);--bg-to:var(--focus-to);
+  --card:rgba(255,255,255,0.55);--card-border:rgba(255,255,255,0.7);
+  --text:#2d3436;--text-light:#636e72;--accent:#e17055;--accent-light:#fab1a0;
+  --green:#00b894;--shadow:0 8px 32px rgba(0,0,0,0.08);
+}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  min-height:100vh;background:linear-gradient(135deg,var(--bg-from),var(--bg-to));
+  color:var(--text);transition:background .6s ease;display:flex;flex-direction:column;align-items:center;
+  padding:20px 16px 40px;
+}
+h1{font-size:1.4rem;font-weight:700;margin-bottom:16px;letter-spacing:-.5px;text-align:center}
+.mode-tabs{display:flex;gap:6px;margin-bottom:20px;background:var(--card);border-radius:14px;padding:4px;backdrop-filter:blur(12px);border:1px solid var(--card-border)}
+.mode-tabs button{
+  padding:8px 20px;border:none;border-radius:11px;font-size:.9rem;font-weight:600;
+  cursor:pointer;background:transparent;color:var(--text-light);transition:all .25s;
+}
+.mode-tabs button.active{background:white;color:var(--accent);box-shadow:var(--shadow)}
+.timer-ring{position:relative;width:240px;height:240px;margin-bottom:24px}
+.timer-ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.timer-ring .bg-circle{fill:none;stroke:rgba(255,255,255,0.5);stroke-width:8}
+.timer-ring .fg-circle{fill:none;stroke:white;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .5s linear;filter:drop-shadow(0 0 8px rgba(255,255,255,0.4))}
+.timer-display{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.timer-display .time{font-size:3.2rem;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.timer-display .label{font-size:.85rem;color:var(--text-light);margin-top:2px}
+.controls{display:flex;gap:12px;margin-bottom:24px}
+.controls button{
+  width:52px;height:52px;border:none;border-radius:50%;font-size:1.3rem;cursor:pointer;
+  background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--card-border);
+  color:var(--text);box-shadow:var(--shadow);transition:all .2s;display:flex;align-items:center;justify-content:center;
+}
+.controls button:hover{transform:scale(1.08);background:rgba(255,255,255,0.8)}
+.controls button:active{transform:scale(.95)}
+.controls button.primary{background:white;color:var(--accent);width:60px;height:60px;font-size:1.5rem}
+.task-input-area{width:100%;max-width:400px;margin-bottom:20px}
+.task-input-area input{
+  width:100%;padding:12px 16px;border:none;border-radius:12px;font-size:.95rem;
+  background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--card-border);
+  color:var(--text);outline:none;transition:border .2s;
+}
+.task-input-area input:focus{border-color:var(--accent)}
+.task-input-area input::placeholder{color:var(--text-light)}
+.stats{width:100%;max-width:400px;margin-bottom:24px}
+.stats-row{display:flex;gap:10px}
+.stat-card{
+  flex:1;padding:14px 12px;background:var(--card);backdrop-filter:blur(12px);
+  border:1px solid var(--card-border);border-radius:14px;text-align:center;box-shadow:var(--shadow);
+}
+.stat-card .val{font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat-card .lbl{font-size:.75rem;color:var(--text-light);margin-top:2px}
+.task-list{width:100%;max-width:400px}
+.task-list h2{font-size:1rem;font-weight:700;margin-bottom:10px}
+.task-item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:8px;
+  background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--card-border);
+  border-radius:12px;box-shadow:var(--shadow);transition:all .2s;
+}
+.task-item .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-light);flex-shrink:0}
+.task-item .dot.done{background:var(--green)}
+.task-item .name{flex:1;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-item .count{font-size:.8rem;color:var(--text-light);font-weight:600;white-space:nowrap}
+.task-item .del{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text-light);padding:0 2px}
+.task-item .del:hover{color:#d63031}
+.empty{color:var(--text-light);font-size:.85rem;text-align:center;padding:16px 0}
+@media(max-width:420px){
+  .timer-ring{width:200px;height:200px}
+  .timer-display .time{font-size:2.6rem}
+  .stat-card .val{font-size:1.4rem}
+  h1{font-size:1.2rem}
+}
+</style>
+</head>
+<body>
+<h1>🍅 番茄工作计时器</h1>
+<div class="mode-tabs">
+  <button class="active" onclick="setMode('focus')">专注 25:00</button>
+  <button onclick="setMode('break')">休息 05:00</button>
+</div>
+<div class="timer-ring">
+  <svg viewBox="0 0 240 240">
+    <circle class="bg-circle" cx="120" cy="120" r="108"/>
+    <circle class="fg-circle" id="fgCircle" cx="120" cy="120" r="108"
+      stroke-dasharray="678.58" stroke-dashoffset="0"/>
+  </svg>
+  <div class="timer-display">
+    <div class="time" id="timerText">25:00</div>
+    <div class="label" id="modeLabel">专注时间</div>
+  </div>
+</div>
+<div class="controls">
+  <button onclick="resetTimer()" title="重置">↺</button>
+  <button class="primary" id="playBtn" onclick="toggleTimer()" title="开始/暂停">▶</button>
+  <button onclick="skipTimer()" title="跳过">⏭</button>
+</div>
+<div class="task-input-area">
+  <input id="taskInput" type="text" placeholder="输入当前任务，回车添加…" maxlength="40"
+    onkeydown="if(event.key==='Enter')addTask()">
+</div>
+<div class="stats">
+  <div class="stats-row">
+    <div class="stat-card"><div class="val" id="statPomos">0</div><div class="lbl">今日番茄</div></div>
+    <div class="stat-card"><div class="val" id="statMins">0</div><div class="lbl">专注分钟</div></div>
+    <div class="stat-card"><div class="val" id="statTasks">0</div><div class="lbl">完成任务</div></div>
+  </div>
+</div>
+<div class="task-list">
+  <h2>📋 今日任务</h2>
+  <div id="taskContainer"></div>
+</div>
+
+<script>
+const FOCUS_SEC=25*60, BREAK_SEC=5*60, CIRCUM=2*Math.PI*108;
+let mode='focus', remaining=FOCUS_SEC, total=FOCUS_SEC, running=false, interval=null;
+let tasks=[], currentTaskIdx=-1;
+
+// --- Audio ---
+function playSound(type){
+  const ac=new (window.AudioContext||window.webkitAudioContext)();
+  if(type==='complete'){
+    [523.25,659.25,783.99].forEach((f,i)=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(.3,ac.currentTime+i*.18);
+      g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+i*.18+.5);
+      o.connect(g);g.connect(ac.destination);
+      o.start(ac.currentTime+i*.18);o.stop(ac.currentTime+i*.18+.5);
+    });
+  } else {
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.type='sine';o.frequency.value=880;
+    g.gain.setValueAtTime(.15,ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.15);
+    o.connect(g);g.connect(ac.destination);
+    o.start();o.stop(ac.currentTime+.15);
+  }
+}
+
+// --- Persistence ---
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function loadData(){
+  try{
+    const d=JSON.parse(localStorage.getItem('pomo_'+todayKey()));
+    if(d){tasks=d.tasks||[];return d}
+  }catch(e){}
+  tasks=[];return null;
+}
+function saveData(){
+  const d={tasks,ts:Date.now()};
+  localStorage.setItem('pomo_'+todayKey(),JSON.stringify(d));
+  updateStats();
+}
+
+// --- Timer ---
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')}
+function renderTimer(){
+  document.getElementById('timerText').textContent=fmt(remaining);
+  const pct=1-remaining/total;
+  document.getElementById('fgCircle').style.strokeDashoffset=CIRCUM*pct;
+}
+function updateTheme(){
+  const r=document.documentElement.style;
+  if(mode==='focus'){r.setProperty('--bg-from','#ff9a9e');r.setProperty('--bg-to','#fad0c4')}
+  else{r.setProperty('--bg-from','#a1c4fd');r.setProperty('--bg-to','#c2e9fb')}
+}
+function setMode(m){
+  mode=m;total=m==='focus'?FOCUS_SEC:BREAK_SEC;remaining=total;
+  document.querySelectorAll('.mode-tabs button').forEach((b,i)=>{
+    b.classList.toggle('active',(i===0&&m==='focus')||(i===1&&m==='break'));
+  });
+  document.getElementById('modeLabel').textContent=m==='focus'?'专注时间':'休息时间';
+  updateTheme();renderTimer();if(running)stopInterval();
+  document.getElementById('playBtn').textContent='▶';running=false;
+}
+function stopInterval(){if(interval){clearInterval(interval);interval=null}}
+function tick(){
+  remaining--;renderTimer();
+  if(remaining<=0){
+    stopInterval();running=false;document.getElementById('playBtn').textContent='▶';
+    playSound('complete');
+    if(mode==='focus'){
+      if(currentTaskIdx>=0&&tasks[currentTaskIdx])tasks[currentTaskIdx].pomos=(tasks[currentTaskIdx].pomos||0)+1;
+      saveData();renderTasks();
+      if(Notification.permission==='granted')new Notification('🍅 番茄完成！',{body:'休息一下吧'});
+      setTimeout(()=>setMode('break'),800);
+    }else{
+      if(Notification.permission==='granted')new Notification('☕ 休息结束！',{body:'继续专注吧'});
+      setTimeout(()=>setMode('focus'),800);
+    }
+  }
+}
+function toggleTimer(){
+  if(running){
+    stopInterval();running=false;document.getElementById('playBtn').textContent='▶';playSound('click');
+  }else{
+    if(remaining<=0){remaining=total;renderTimer()}
+    running=true;document.getElementById('playBtn').textContent='⏸';
+    interval=setInterval(tick,1000);playSound('click');
+  }
+}
+function resetTimer(){
+  stopInterval();running=false;remaining=total;renderTimer();
+  document.getElementById('playBtn').textContent='▶';playSound('click');
+}
+function skipTimer(){
+  remaining=0;tick();
+}
+
+// --- Tasks ---
+function addTask(){
+  const inp=document.getElementById('taskInput'),name=inp.value.trim();
+  if(!name)return;
+  tasks.push({name,pomos:0,done:false});
+  inp.value='';saveData();renderTasks();
+  playSound('click');
+}
+function toggleTask(i){
+  tasks[i].done=!tasks[i].done;
+  if(tasks[i].done&&currentTaskIdx===i)currentTaskIdx=-1;
+  saveData();renderTasks();playSound('click');
+}
+function deleteTask(i){
+  tasks.splice(i,1);
+  if(currentTaskIdx===i)currentTaskIdx=-1;
+  else if(currentTaskIdx>i)currentTaskIdx--;
+  saveData();renderTasks();
+}
+function selectTask(i){
+  currentTaskIdx=i;renderTasks();
+  document.querySelectorAll('.task-item').forEach((el,idx)=>el.style.background=idx===i?'rgba(255,255,255,0.75)':'');
+}
+function renderTasks(){
+  const c=document.getElementById('taskContainer');
+  if(!tasks.length){c.innerHTML='<div class="empty">暂无任务，输入任务开始专注 🎯</div>';return}
+  c.innerHTML=tasks.map((t,i)=>`
+    <div class="task-item" onclick="selectTask(${i})" style="${i===currentTaskIdx?'background:rgba(255,255,255,0.75)':''}">
+      <div class="dot${t.done?' done':''}" onclick="event.stopPropagation();toggleTask(${i})"></div>
+      <div class="name" style="${t.done?'text-decoration:line-through;opacity:.5':''}">${esc(t.name)}</div>
+      <div class="count">🍅${t.pomos||0}</div>
+      <button class="del" onclick="event.stopPropagation();deleteTask(${i})">×</button>
+    </div>
+  `).join('');
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function updateStats(){
+  const totalPomos=tasks.reduce((s,t)=>s+(t.pomos||0),0);
+  const doneTasks=tasks.filter(t=>t.done).length;
+  document.getElementById('statPomos').textContent=totalPomos;
+  document.getElementById('statMins').textContent=totalPomos*25;
+  document.getElementById('statTasks').textContent=doneTasks;
+}
+
+// --- Init ---
+(function init(){
+  loadData();renderTasks();updateStats();renderTimer();
+  if('Notification' in window && Notification.permission==='default')Notification.requestPermission();
+})();
+</script>
+</body>
+</html>
